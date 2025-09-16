@@ -1,0 +1,7 @@
+/pos-be/node_modules
+/pos-fe/node_modules
+
+/pos-fe/.vscode
+
+/pos-be/.env
+/pos-fe/.env
