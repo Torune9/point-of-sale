@@ -7,7 +7,7 @@ async function main() {
   const saltRounds = 10
   const hashedPassword = await bcrypt.hash('12345678', saltRounds)
 
-  // Makes 5 role
+  // Roles
   await prisma.roles.createMany({
     data: [
       { name: 'admin' },
@@ -19,16 +19,13 @@ async function main() {
     skipDuplicates: true,
   })
 
-  // Get role admin & owner
   const adminRole = await prisma.roles.findFirst({ where: { name: 'admin' } })
   const ownerRole = await prisma.roles.findFirst({ where: { name: 'owner' } })
 
-  if (!adminRole || !ownerRole) {
-    throw new Error('Roles not found!')
-  }
+  if (!adminRole || !ownerRole) throw new Error('Roles not found!')
 
-  // Admin user
-  const adminUser = await prisma.users.upsert({
+  // Admin
+  await prisma.users.upsert({
     where: { email: 'admin@mail.com' },
     update: {},
     create: {
@@ -39,7 +36,7 @@ async function main() {
     },
   })
 
-  // Owner user
+  // Owner
   const ownerUser = await prisma.users.upsert({
     where: { email: 'owner@mail.com' },
     update: {},
@@ -52,7 +49,7 @@ async function main() {
   })
 
   // Business
-  await prisma.businesses.upsert({
+  const business = await prisma.businesses.upsert({
     where: { ownerId: ownerUser.id },
     update: {},
     create: {
@@ -60,32 +57,33 @@ async function main() {
       ownerId: ownerUser.id,
     },
   })
-  // Category
+
+  // Categories
   await prisma.category.createMany({
     data: [
       { name: 'Food' },
       { name: 'Drink' },
       { name: 'Office stationery' },
       { name: 'Electronic' },
-      { name: 'Health' }
-    ]
+      { name: 'Health' },
+    ],
+    skipDuplicates: true,
   })
-  const categories = await prisma.category.findMany()
 
-  // Helper: cari id kategori by name
+  const categories = await prisma.category.findMany()
   const getCategoryId = (name: string) =>
     categories.find((c) => c.name === name)?.id || null
 
-  // Buat produk (2 tiap kategori)
+  // Products
   await prisma.product.createMany({
     data: [
-      // Food
       {
         name: 'Instant Noodles',
         sku: 'FOOD-001',
         price: 2500,
         stock: 100,
         categoryId: getCategoryId('Food'),
+        businessId: business.id,
       },
       {
         name: 'Biscuits',
@@ -93,15 +91,15 @@ async function main() {
         price: 5000,
         stock: 50,
         categoryId: getCategoryId('Food'),
+        businessId: business.id,
       },
-
-      // Drink
       {
         name: 'Mineral Water 600ml',
         sku: 'DRINK-001',
         price: 3000,
         stock: 200,
         categoryId: getCategoryId('Drink'),
+        businessId: business.id,
       },
       {
         name: 'Cola Can 250ml',
@@ -109,15 +107,15 @@ async function main() {
         price: 7000,
         stock: 80,
         categoryId: getCategoryId('Drink'),
+        businessId: business.id,
       },
-
-      // Office stationery
       {
         name: 'Ballpoint Pen',
         sku: 'OFFICE-001',
         price: 4000,
         stock: 120,
         categoryId: getCategoryId('Office stationery'),
+        businessId: business.id,
       },
       {
         name: 'Notebook A5',
@@ -125,15 +123,15 @@ async function main() {
         price: 10000,
         stock: 60,
         categoryId: getCategoryId('Office stationery'),
+        businessId: business.id,
       },
-
-      // Electronic
       {
         name: 'USB Cable',
         sku: 'ELEC-001',
         price: 15000,
         stock: 40,
         categoryId: getCategoryId('Electronic'),
+        businessId: business.id,
       },
       {
         name: 'LED Bulb 10W',
@@ -141,15 +139,15 @@ async function main() {
         price: 20000,
         stock: 70,
         categoryId: getCategoryId('Electronic'),
+        businessId: business.id,
       },
-
-      // Health
       {
         name: 'Vitamin C 500mg',
         sku: 'HEALTH-001',
         price: 25000,
         stock: 90,
         categoryId: getCategoryId('Health'),
+        businessId: business.id,
       },
       {
         name: 'Pain Relief Ointment',
@@ -157,6 +155,7 @@ async function main() {
         price: 18000,
         stock: 40,
         categoryId: getCategoryId('Health'),
+        businessId: business.id,
       },
     ],
   })
