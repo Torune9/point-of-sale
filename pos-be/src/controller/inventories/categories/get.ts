@@ -26,7 +26,7 @@ export const getCategoryById = async (req: Request, res: Response) => {
                 id: id as string
             },
             include: {
-                product: true
+                products: true
             }
         })
 
