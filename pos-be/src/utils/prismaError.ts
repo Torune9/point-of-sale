@@ -2,7 +2,7 @@ import type { NextFunction, Request, Response } from "express";
 import { Prisma } from "@prisma/client";
 import { logger } from "./logger.js";
 
-export const errorHandler = (
+export const errorHandlerPrisma = (
   err: any,
   req: Request,
   res: Response,
