@@ -3,7 +3,7 @@ import "dotenv/config"
 import express from 'express'
 import router from './router/router.js'
 
-import { errorHandler } from './utils/prismaError.js'
+import { errorHandlerPrisma } from './utils/prismaError.js'
 
 const port = 3000
 const app = express()
@@ -16,7 +16,7 @@ app.use(express.urlencoded({
 
 app.use('/api', router)
 
-app.use(errorHandler)
+app.use(errorHandlerPrisma)
 
 app.listen(port, () => {
     console.warn(`server running on port ${port}`);
