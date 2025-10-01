@@ -5,3 +5,5 @@
 
 /pos-be/.env
 /pos-fe/.env
+
+/pos-be/logs
