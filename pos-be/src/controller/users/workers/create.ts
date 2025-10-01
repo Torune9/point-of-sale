@@ -3,9 +3,9 @@ import type { NextFunction, Request, Response } from "express";
 import prisma from "../../../utils/prisma.js";
 
 import bcrypt from 'bcrypt'
-import { Prisma } from "@prisma/client";
+import { isPrismaError } from "../../../utils/isPrismaError.js";
 
-export const createWorkers = async (req: Request, res: Response,next:NextFunction) => {
+export const createWorkers = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { username, email, password, roleId, businessId } = req.body;
 
@@ -27,8 +27,9 @@ export const createWorkers = async (req: Request, res: Response,next:NextFunctio
             data: worker,
         });
     } catch (error) {
-        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (isPrismaError(error)) {
             next(error)
+            return
         }
 
         return res.status(500).json({
