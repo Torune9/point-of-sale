@@ -46,6 +46,7 @@ model Businesses{
   ownerId String @unique
   workers Workers[]
   products Product[]
+  sales Sale[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -80,7 +81,7 @@ model Category {
 model Product{
   id String @id @default(uuid())
   name String
-  sku String @unique
+  sku String
   price Float
   stock Int @default(0)
   category Category? @relation(fields: [categoryId],references: [id],onDelete: SetNull)
@@ -88,9 +89,11 @@ model Product{
   bussines Businesses @relation(fields: [businessId],references: [id],onDelete: Cascade)
   businessId String
   movements  StockMovement[]
+  items Item[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@unique([sku,businessId])
   @@map("products")
 }
 
@@ -106,9 +109,37 @@ model StockMovement {
   product Product @relation(fields: [productId],references: [id],onDelete: Cascade, onUpdate: Cascade )
   productId String
   note String
+  sale Sale? @relation(fields: [saleId], references: [id])
+  saleId String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@map("stock_movements")
 }
 
+model Sale {
+  id String @id @default(cuid())
+  invoice String @unique
+  totalAmount Float
+  businesses Businesses @relation(fields: [businessId],references: [id],onDelete: Cascade)
+  businessId String
+  items Item[]
+  movements StockMovement[]
+  createdAt DateTime @default(now())
+
+  @@map("sales")
+}
+
+model Item {
+  id String @id @default(cuid())
+  quantity Int
+  price       Float
+  subtotal    Float
+  sale Sale @relation(fields: [saleId],references: [id])
+  saleId String
+  product Product @relation(fields: [productId],references: [id])
+  productId String
+  createdAt DateTime @default(now())
+
+  @@map("items")
+}
