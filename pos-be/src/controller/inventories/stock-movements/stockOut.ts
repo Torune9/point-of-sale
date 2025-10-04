@@ -4,20 +4,28 @@ import { generateInvoice } from "../../../utils/invoiceGenerator.js";
 import type { SaleItem } from "../../../schemas/stockMovementSchema.js";
 export const stockOutSelling = async (req: Request, res: Response) => {
     try {
-        const { businessId, items, totalAmount} = req.body;
+        const { businessId, items, totalAmount, paidAmount, workerId } = req.body;
         const products = items as Array<SaleItem>;
 
         const result = await prisma.$transaction(async (tx) => {
-            // 1. Buat Sale
+            if (paidAmount < totalAmount) {
+                return res.status(400).json({
+                    message: 'money is not enough',
+                    code: res.statusCode
+                })
+            }
+            // Buat Sale
             const selling = await tx.sale.create({
                 data: {
                     businessId,
                     totalAmount: parseFloat(totalAmount),
                     invoice: await generateInvoice(businessId),
+                    paidAmount,
+                    changeAmount: Math.abs(paidAmount - totalAmount)
                 },
             });
 
-            // 2. Buat Items + Update Stock + Catat StockMovement
+            // Buat Items + Update Stock + Catat StockMovement
             for (const item of products) {
                 const product = await prisma.product.findFirst({
                     where: {
@@ -70,7 +78,18 @@ export const stockOutSelling = async (req: Request, res: Response) => {
                         saleId: selling.id,
                     },
                 });
+                // Catat Cashflow
             }
+            await tx.cashflow.create({
+                data: {
+                    type: "IN",
+                    amount: selling.totalAmount,
+                    note: `Selling ${selling.invoice}`,
+                    saleId: selling.id,
+                    businessId: selling.businessId,
+                    // workerId,
+                },
+            });
 
             return selling;
         });
