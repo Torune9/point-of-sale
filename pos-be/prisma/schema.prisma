@@ -47,6 +47,7 @@ model Businesses{
   workers Workers[]
   products Product[]
   sales Sale[]
+  cash Cashflow[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -62,6 +63,7 @@ model Workers {
   roleId String? 
   business  Businesses @relation(fields: [businessId], references: [id], onDelete: Cascade)
   businessId String
+  cash Cashflow[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -121,10 +123,13 @@ model Sale {
   id String @id @default(cuid())
   invoice String @unique
   totalAmount Float
+  paidAmount    Float    
+  changeAmount  Float  
   businesses Businesses @relation(fields: [businessId],references: [id],onDelete: Cascade)
   businessId String
   items Item[]
   movements StockMovement[]
+  cash Cashflow[]
   createdAt DateTime @default(now())
 
   @@map("sales")
@@ -143,3 +148,21 @@ model Item {
 
   @@map("items")
 }
+
+model Cashflow {
+  id          String       @id @default(uuid())
+  type        MovementType
+  amount      Float
+  note        String?
+  sale        Sale?         @relation(fields: [saleId], references: [id], onDelete: SetNull)
+  saleId      String?
+  business    Businesses    @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  businessId  String
+  worker      Workers?      @relation(fields: [workerId], references: [id], onDelete: SetNull)
+  workerId    String?
+  createdAt   DateTime      @default(now())
+
+  @@map("cashflows")
+}
+
+
