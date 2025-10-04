@@ -18,6 +18,7 @@ export const CreateSaleSchema = z.object({
   businessId: z.string(),
   items: z.array(SaleItemSchema).min(1),
   totalAmount: z.number().positive(),
+  paidAmount : z.number().positive(),
 });
 
 
