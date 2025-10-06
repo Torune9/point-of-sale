@@ -86,6 +86,7 @@ model Product{
   sku String
   price Float
   stock Int @default(0)
+  barcode String?
   category Category? @relation(fields: [categoryId],references: [id],onDelete: SetNull)
   categoryId String?
   bussines Businesses @relation(fields: [businessId],references: [id],onDelete: Cascade)
@@ -96,6 +97,7 @@ model Product{
   updatedAt DateTime @updatedAt
 
   @@unique([sku,businessId])
+  @@unique([businessId,barcode])
   @@map("products")
 }
 
