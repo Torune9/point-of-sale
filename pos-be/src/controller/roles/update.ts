@@ -5,7 +5,7 @@ export const updateRole = async (req: Request, res: Response) => {
     try {
         const { id } = req.params
         const { name } = req.body
-        const role = await prisma.roles.update({
+        const role = await prisma.role.update({
             where: {
                 id: id as string
             },

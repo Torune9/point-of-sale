@@ -3,7 +3,7 @@ import prisma from "../../utils/prisma.js"
 
 export const getRoles = async (req: Request, res: Response) => {
     try {
-        const roles = await prisma.roles.findMany()
+        const roles = await prisma.role.findMany()
         return res.json({
             message : 'roles successfully obtained',
             data : roles

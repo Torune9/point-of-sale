@@ -4,7 +4,7 @@ import type { Request, Response } from "express"
 export const createRole = async (req: Request, res: Response) => {
     try {
         const { name } = req.body
-        const role = await prisma.roles.create({
+        const role = await prisma.role.create({
             data: {
                 name: name
             }
