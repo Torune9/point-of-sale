@@ -55,6 +55,7 @@ export const stockOutSelling = async (req: Request, res: Response) => {
                         price: item.price,
                         subtotal: item.price * item.quantity,
                         saleId: selling.id,
+                        businessId : businessId
                     },
                 });
 
@@ -76,6 +77,7 @@ export const stockOutSelling = async (req: Request, res: Response) => {
                         note: "SALE",
                         productId: item.productId,
                         saleId: selling.id,
+                        businessId : businessId
                     },
                 });
                 // Catat Cashflow

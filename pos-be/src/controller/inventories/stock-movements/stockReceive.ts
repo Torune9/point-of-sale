@@ -3,7 +3,7 @@ import prisma from "../../../utils/prisma.js";
 
 export const stockMovement = async (req: Request, res: Response) => {
     try {
-        const { quantity, type, productId, note } = req.body
+        const { quantity, type, productId, note,businessId } = req.body
 
         const product = await prisma.product.findFirst({
             where: {
@@ -31,7 +31,8 @@ export const stockMovement = async (req: Request, res: Response) => {
                         quantity,
                         type,
                         productId,
-                        note
+                        note,
+                        businessId
                     },
                     omit: {
                         updatedAt: true,
@@ -61,7 +62,8 @@ export const stockMovement = async (req: Request, res: Response) => {
                         quantity,
                         type,
                         productId,
-                        note
+                        note,
+                        businessId
                     },
                     omit: {
                         updatedAt: true,

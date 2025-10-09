@@ -5,7 +5,7 @@ import { isPrismaError } from "../../../utils/isPrismaError.js";
 
 export const createCategory = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { name } = req.body
+        const { name, businessId } = req.body
 
         let category = await prisma.category.findFirst({
             where: {
@@ -23,7 +23,7 @@ export const createCategory = async (req: Request, res: Response, next: NextFunc
             })
         }
         category = await prisma.category.create({
-            data: { name },
+            data: { name, businessId },
         })
         return res.json({
             message: 'category has been created',
