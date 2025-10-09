@@ -4,7 +4,7 @@ import prisma from "../../../utils/prisma.js";
 export const getWorkers = async (req: Request, res: Response) => {
     try {
         const { businessId } = req.params
-        const workers = await prisma.workers.findMany({
+        const workers = await prisma.worker.findMany({
             where: {
                 businessId: businessId as string
             },

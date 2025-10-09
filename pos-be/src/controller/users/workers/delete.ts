@@ -4,7 +4,7 @@ import prisma from "../../../utils/prisma.js";
 export const deleteWorkers = async (req: Request, res: Response) => {
     try {
         const { id } = req.params
-        const workers = await prisma.workers.delete({
+        const workers = await prisma.worker.delete({
             where: {
                 id: id as string
             }

@@ -13,7 +13,7 @@ export const updateWorkers = async (req: Request, res: Response) => {
             })
         }
 
-        const workers = await prisma.workers.update({
+        const workers = await prisma.worker.update({
             where: {
                 id: id as string
             },

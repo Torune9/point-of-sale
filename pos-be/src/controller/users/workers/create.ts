@@ -11,7 +11,7 @@ export const createWorkers = async (req: Request, res: Response, next: NextFunct
 
         const hashPassword = await bcrypt.hash(password, 10);
 
-        const worker = await prisma.workers.create({
+        const worker = await prisma.worker.create({
             data: {
                 username,
                 email,
