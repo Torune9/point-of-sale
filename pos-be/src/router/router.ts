@@ -6,6 +6,7 @@ import { categoryRouter } from "./routes/categoryRoutes.js"
 import { productRouter } from "./routes/productRoutes.js"
 import { stockMomeventRouter } from "./routes/stockMovementRoutes.js"
 import { cashRouter } from "./routes/cashFlow.js"
+import { salesRouter } from "./routes/salesRouter.js"
 
 const router = Router()
 
@@ -16,5 +17,6 @@ router.use('/categories', categoryRouter)
 router.use('/products', productRouter)
 router.use('/stock-movements',stockMomeventRouter)
 router.use('/cash',cashRouter)
+router.use('/sales',salesRouter)
 
 export default router
