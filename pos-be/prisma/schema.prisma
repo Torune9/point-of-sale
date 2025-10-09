@@ -1,12 +1,5 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
-  // output   = "../src/prisma"
 }
 
 datasource db {
@@ -14,145 +7,157 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Roles {
-  id String @id @default(uuid())
-  name String
-
-  user Users[]
-  workers Workers[]
-
-  @@map("roles")
-  
-}
-
-model Users {
-  id String @id @default(uuid())
-  username String 
-  email String @unique
-  password String
-  role Roles? @relation(fields: [roleId],references: [id],onDelete: SetNull)
-  roleId String?
-  bussiness Businesses?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@map("users")
-}
-
-model Businesses{
-  id String @id @default(uuid())
-  name String
-  user Users @relation(fields: [ownerId],references: [id],onDelete: Cascade)
-  ownerId String @unique
-  workers Workers[]
-  products Product[]
-  sales Sale[]
-  cash Cashflow[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@map("businesses")
-}
-
-model Workers {
-  id        String   @id @default(uuid())
-  username  String
-  email     String   @unique
-  password  String
-  role Roles? @relation(fields: [roleId],references: [id],onDelete: SetNull)
-  roleId String? 
-  business  Businesses @relation(fields: [businessId], references: [id], onDelete: Cascade)
-  businessId String
-  cash Cashflow[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@map("workers")
-}
-
-
-model Category {
-  id String @id @default(uuid())
-  name String @unique
-  
-  products Product[]
-
-  @@map("categories")
-}
-
-model Product{
-  id String @id @default(uuid())
-  name String
-  sku String
-  price Float
-  stock Int @default(0)
-  barcode String?
-  category Category? @relation(fields: [categoryId],references: [id],onDelete: SetNull)
-  categoryId String?
-  bussines Businesses @relation(fields: [businessId],references: [id],onDelete: Cascade)
-  businessId String
-  movements  StockMovement[]
-  items Item[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@unique([sku,businessId])
-  @@unique([businessId,barcode])
-  @@map("products")
-}
-
 enum MovementType {
   IN
   OUT
 }
 
-model StockMovement {
-  id String @id @default(uuid())
-  quantity Int
-  type MovementType
-  product Product @relation(fields: [productId],references: [id],onDelete: Cascade, onUpdate: Cascade )
-  productId String
-  note String
-  sale Sale? @relation(fields: [saleId], references: [id])
-  saleId String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model Role {
+  id       String   @id @default(uuid())
+  name     String
+  user     User[]
+  workers  Worker[]
 
-  @@map("stock_movements")
+  @@map("roles")
+}
+
+model User {
+  id         String       @id @default(uuid())
+  username   String
+  email      String        @unique
+  password   String
+  role       Role?         @relation(fields: [roleId], references: [id], onDelete: SetNull)
+  roleId     String?
+  business   Businesses?
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+
+  @@map("users")
+}
+
+model Businesses {
+  id          String        @id @default(uuid())
+  name        String
+  owner       User          @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId     String        @unique
+  workers     Worker[]
+  categories  Category[]
+  products    Product[]
+  sales       Sale[]
+  cashflows   Cashflow[]
+  items       Item[]           
+  stockMoves  StockMovement[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@map("businesses")
+}
+
+model Worker {
+  id          String        @id @default(uuid())
+  username    String
+  email       String        @unique
+  password    String
+  role        Role?         @relation(fields: [roleId], references: [id], onDelete: SetNull)
+  roleId      String?
+  business    Businesses    @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  businessId  String
+  cashflows   Cashflow[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@index([businessId])
+  @@map("workers")
+}
+
+model Category {
+  id          String        @id @default(uuid())
+  name        String
+  business    Businesses    @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  businessId  String
+  products    Product[]
+
+  @@unique([businessId, name])
+  @@index([businessId])
+  @@map("categories")
+}
+
+model Product {
+  id          String        @id @default(uuid())
+  name        String
+  sku         String
+  price       Float
+  stock       Int           @default(0)
+  barcode     String?
+  category    Category?     @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  categoryId  String?
+  business    Businesses    @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  businessId  String
+  movements   StockMovement[]
+  items       Item[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@unique([sku, businessId])
+  @@unique([businessId, barcode])
+  @@index([businessId])
+  @@map("products")
 }
 
 model Sale {
-  id String @id @default(cuid())
-  invoice String @unique
-  totalAmount Float
-  paidAmount    Float    
-  changeAmount  Float  
-  businesses Businesses @relation(fields: [businessId],references: [id],onDelete: Cascade)
-  businessId String
-  items Item[]
-  movements StockMovement[]
-  cash Cashflow[]
-  createdAt DateTime @default(now())
+  id            String        @id @default(cuid())
+  invoice       String        @unique
+  totalAmount   Float
+  paidAmount    Float
+  changeAmount  Float
+  business      Businesses    @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  businessId    String
+  items         Item[]
+  movements     StockMovement[]
+  cashflows     Cashflow[]
+  createdAt     DateTime      @default(now())
 
+  @@index([businessId])
   @@map("sales")
 }
 
 model Item {
-  id String @id @default(cuid())
-  quantity Int
-  price       Float
-  subtotal    Float
-  sale Sale @relation(fields: [saleId],references: [id])
-  saleId String
-  product Product @relation(fields: [productId],references: [id])
-  productId String
-  createdAt DateTime @default(now())
+  id           String       @id @default(cuid())
+  quantity     Int
+  price        Float
+  subtotal     Float
+  sale         Sale         @relation(fields: [saleId], references: [id])
+  saleId       String
+  product      Product      @relation(fields: [productId], references: [id])
+  productId    String
+  business     Businesses   @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  businessId   String
+  createdAt    DateTime     @default(now())
 
+  @@index([businessId])
   @@map("items")
 }
 
+model StockMovement {
+  id          String        @id @default(uuid())
+  quantity    Int
+  type        MovementType
+  product     Product       @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  productId   String
+  sale        Sale?         @relation(fields: [saleId], references: [id])
+  saleId      String?
+  note        String?
+  business    Businesses    @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  businessId  String
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@index([businessId])
+  @@map("stock_movements")
+}
+
 model Cashflow {
-  id          String       @id @default(uuid())
+  id          String        @id @default(uuid())
   type        MovementType
   amount      Float
   note        String?
@@ -160,11 +165,10 @@ model Cashflow {
   saleId      String?
   business    Businesses    @relation(fields: [businessId], references: [id], onDelete: Cascade)
   businessId  String
-  worker      Workers?      @relation(fields: [workerId], references: [id], onDelete: SetNull)
+  worker      Worker?       @relation(fields: [workerId], references: [id], onDelete: SetNull)
   workerId    String?
   createdAt   DateTime      @default(now())
 
+  @@index([businessId])
   @@map("cashflows")
 }
-
-
