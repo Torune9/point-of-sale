@@ -8,7 +8,7 @@ const login = async (req: Request, res: Response) => {
     try {
         const { email, password } = req.body
 
-        const users = await prisma.users.findFirst({
+        const users = await prisma.user.findFirst({
             where: {
                 email
             }
