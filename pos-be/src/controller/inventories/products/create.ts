@@ -1,6 +1,6 @@
 import type { Request, Response, NextFunction } from "express"
 import prisma from "../../../utils/prisma.js"
-import { generateSKU } from "../../../utils/generateSku.js"
+import { generateSKU } from "../../../helper/generateSku.js"
 import { isPrismaError } from "../../../utils/isPrismaError.js"
 
 import * as QrCode from 'qrcode'

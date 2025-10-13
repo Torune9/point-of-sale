@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import prisma from "../../../utils/prisma.js";
-import { generateInvoice } from "../../../utils/invoiceGenerator.js";
+import { generateInvoice } from "../../../helper/invoiceGenerator.js";
 import type { SaleItem } from "../../../schemas/stockMovementSchema.js";
 export const stockOutSelling = async (req: Request, res: Response) => {
     try {
