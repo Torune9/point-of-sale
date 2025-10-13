@@ -1,8 +1,8 @@
 import { Prisma } from "@prisma/client";
+import { logger } from "./logger.js";
 
 export function isPrismaError(error: unknown): boolean {
-    console.log(error);
-    
+  logger.error(error)
   return (
     error instanceof Prisma.PrismaClientKnownRequestError ||
     error instanceof Prisma.PrismaClientValidationError ||
