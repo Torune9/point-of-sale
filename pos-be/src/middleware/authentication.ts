@@ -18,14 +18,16 @@ export const authenticate = (req: Request, res: Response, next: NextFunction) =>
         if (scheme !== "Bearer" || !token) {
             return res.status(401).json({
                 message: "Unauthorized: Invalid Authorization format",
+                code: res.statusCode
             });
         }
-
+        
         const decoded = verifyToken(token) as JwtPayload;
-
+        
         if (typeof decoded === "string") {
             return res.status(401).json({
                 message: "Invalid token payload",
+                code: res.statusCode
             });
         }
 
