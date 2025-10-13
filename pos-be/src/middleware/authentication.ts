@@ -1,44 +1,37 @@
 import type { NextFunction, Request, Response } from "express";
-import jwt from "jsonwebtoken"
-import { logger } from "../utils/logger.js";
+import { verifyToken } from "../utils/jwt.js";
+import { handleJwtError } from "../utils/jwtError.js";
+import type { JwtPayload } from "jsonwebtoken";
 
 export const authenticate = (req: Request, res: Response, next: NextFunction) => {
     try {
+        const authHeader = req.get("Authorization");
 
-        const [scheme, token] = (req.get('Authorization') ?? '').split(' ');
-
-        if (!token) {
-            return res.status(400).json({
-                message: 'must be loged in',
-                code: res.statusCode
-            })
-        }
-        const secretKey = process.env.PRIVATE_KEY;
-        if (!secretKey) {
-            throw new Error("PRIVATE_KEY not set in environment");
-        }
-
-        const tokenVerified = jwt.verify(token,secretKey)
-
-        if (tokenVerified && scheme == "Bearer") {
-            next()
-        }
-    } catch (error: any) {
-        if (error.name === "TokenExpiredError") {
+        if (!authHeader) {
             return res.status(401).json({
-                code: 401,
-                message: "Token expired",
+                message: "Unauthorized: Missing Authorization header",
             });
         }
 
-        if (error.name === "JsonWebTokenError") {
+        const [scheme, token] = authHeader.split(" ");
+
+        if (scheme !== "Bearer" || !token) {
             return res.status(401).json({
-                code: 401,
-                message: "Invalid token",
+                message: "Unauthorized: Invalid Authorization format",
             });
         }
 
-        logger.error(error)
+        const decoded = verifyToken(token) as JwtPayload;
 
+        if (typeof decoded === "string") {
+            return res.status(401).json({
+                message: "Invalid token payload",
+            });
+        }
+
+        next();
+    } catch (error) {
+
+        return handleJwtError(error, res);
     }
-}
+};
