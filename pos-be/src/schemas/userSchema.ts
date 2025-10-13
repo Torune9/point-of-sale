@@ -5,3 +5,7 @@ export const User = z.object({
     email : z.email(),
     password : z.string().min(8)
 })
+
+export const UserLogin = User.partial({
+    username : true,
+})
