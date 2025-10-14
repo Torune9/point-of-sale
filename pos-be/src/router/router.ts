@@ -18,5 +18,4 @@ router.use('/products', productRouter)
 router.use('/stock-movements',stockMomeventRouter)
 router.use('/cash',cashRouter)
 router.use('/sales',salesRouter)
-
 export default router
