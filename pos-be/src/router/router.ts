@@ -7,10 +7,14 @@ import { productRouter } from "./routes/productRoutes.js"
 import { stockMomeventRouter } from "./routes/stockMovementRoutes.js"
 import { cashRouter } from "./routes/cashFlow.js"
 import { salesRouter } from "./routes/salesRouter.js"
+import { authenticate } from "../middleware/authentication.js"
 
 const router = Router()
 
 router.use('/auth', authRouter)
+
+router.use(authenticate)
+
 router.use('/roles', roleRouter)
 router.use('/workers', workerRouter)
 router.use('/categories', categoryRouter)
@@ -18,4 +22,5 @@ router.use('/products', productRouter)
 router.use('/stock-movements',stockMomeventRouter)
 router.use('/cash',cashRouter)
 router.use('/sales',salesRouter)
+
 export default router

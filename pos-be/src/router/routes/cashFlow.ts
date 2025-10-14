@@ -7,4 +7,5 @@ import { cashData } from "../../schemas/cashFlowSchema.js";
 export const cashRouter = e.Router()
 
 cashRouter.post('/',validateData(cashData),cashFlow)
+
 cashRouter.get('/:id',totalCash)

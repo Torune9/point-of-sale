@@ -6,5 +6,6 @@ import { stockOutSelling } from "../../controller/inventories/stock-movements/st
 
 export const stockMomeventRouter = e.Router()
 
-stockMomeventRouter.post('/',validateData(ProductMovement),stockMovement)
-stockMomeventRouter.post('/selling',validateData(CreateSaleSchema),stockOutSelling)
+stockMomeventRouter.post('/', validateData(ProductMovement), stockMovement)
+
+stockMomeventRouter.post('/selling', validateData(CreateSaleSchema), stockOutSelling)

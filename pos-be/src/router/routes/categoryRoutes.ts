@@ -3,15 +3,16 @@ import { createCategory } from "../../controller/inventories/categories/create.j
 import { getCategory, getCategoryById } from "../../controller/inventories/categories/get.js";
 import { updateCategory } from "../../controller/inventories/categories/update.js";
 import { deleteCategory } from "../../controller/inventories/categories/delete.js";
+import { adminAuth } from "../../middleware/adminAuthorization.js";
 
 export const categoryRouter = e.Router()
 
 categoryRouter.get('/', getCategory)
 
-categoryRouter.post('/', createCategory)
+categoryRouter.post('/', adminAuth, createCategory)
 
 categoryRouter.get('/:id', getCategoryById)
 
-categoryRouter.patch('/:id', updateCategory)
+categoryRouter.patch('/:id', adminAuth, updateCategory)
 
-categoryRouter.delete('/:id', deleteCategory)
+categoryRouter.delete('/:id', adminAuth, deleteCategory)
