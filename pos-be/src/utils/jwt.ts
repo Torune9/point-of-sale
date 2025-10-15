@@ -6,7 +6,7 @@ if (!privateKey) {
 }
 
 const generateToken = (payload: object) => {
-    return jwt.sign(payload, privateKey, { expiresIn: "1h" });
+    return jwt.sign(payload, privateKey, { expiresIn: "24h" });
 };
 
 const verifyToken = (token: string) => {
