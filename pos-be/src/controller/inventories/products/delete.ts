@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
 import prisma from "../../../utils/prisma.js";
+import { cloudinaryImageDestroy } from "../../../utils/cloudinary.js";
 
 export const deleteProduct = async (req: Request, res: Response) => {
     try {
@@ -11,6 +12,8 @@ export const deleteProduct = async (req: Request, res: Response) => {
                 businessId: businessId as string
             }
         })
+
+        await cloudinaryImageDestroy(product.id)
 
         return res.json({
             message: 'product has been updated',
