@@ -1,6 +1,6 @@
 import e from "express";
-import { dailySalesReport } from "../../controller/finance/dailySales.js";
+import { salesReport } from "../../controller/finance/salesReport.js";
 
 export const salesRouter = e.Router()
 
-salesRouter.get('/report/:businessId', dailySalesReport)
+salesRouter.get('/report/:businessId', salesReport)
