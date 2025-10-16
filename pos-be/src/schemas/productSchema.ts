@@ -9,6 +9,4 @@ export const Product = z.object({
 })
 
 
-export const ProductUpdate = Product.partial({
-    categoryId :true
-})
+export const ProductUpdate = Product.partial()
