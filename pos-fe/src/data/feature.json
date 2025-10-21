@@ -1,27 +1,27 @@
 [
   {
     "title": "Manajemen Produk",
-    "tag": "h2",
+    "tag": "h3",
     "text": "Kelola produk dengan mudah mulai dari nama, harga, stok, hingga kategori. Setiap perubahan langsung tersimpan dan terhubung dengan transaksi penjualan."
   },
   {
     "title": "Laporan Penjualan Otomatis",
-    "tag": "h2",
+    "tag": "h3",
     "text": "Dapatkan ringkasan penjualan harian, mingguan, atau bulanan secara otomatis untuk memantau performa bisnis tanpa repot menghitung manual."
   },
   {
     "title": "Manajemen Stok Otomatis",
-    "tag": "h2",
+    "tag": "h3",
     "text": "Stok produk akan berkurang atau bertambah secara otomatis setiap kali ada transaksi penjualan atau pembelian, menjaga data tetap akurat."
   },
   {
     "title": "Multi Pengguna dan Hak Akses",
-    "tag": "h2",
+    "tag": "h3",
     "text": "Atur peran seperti pemilik dan kasir dengan akses yang berbeda. Pemilik bisa memantau semua aktivitas, sementara kasir fokus pada transaksi."
   },
   {
     "title": "Laporan Keuangan dan Arus Kas",
-    "tag": "h2",
+    "tag": "h3",
     "text": "Pantau pemasukan dan pengeluaran dengan fitur pencatatan kas. Dapatkan gambaran arus keuangan bisnis secara real time."
   }
 ]
