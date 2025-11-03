@@ -4,7 +4,7 @@
             <NavBar/>
         </template>
         <template #content>
-            <div class="box-border p-4 flex flex-col gap-y-10">
+            <div class="box-border flex flex-col gap-y-10">
                 <slot/>
             </div>
         </template>
@@ -12,6 +12,6 @@
 </template>
 
 <script setup lang="ts">
-import NavBar from '@/components/navigation/NavBar.vue';
+import NavBar from '@/components/organism/NavBar.vue';
 import BaseLayout from './BaseLayout.vue';
 </script>
