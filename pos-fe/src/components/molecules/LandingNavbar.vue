@@ -5,9 +5,9 @@
         <Transition name="slide">
             <div v-if="isOpen && isMobile" class="fixed inset-0 z-50 flex">
 
-                <div class="absolute inset-0 bg-black/40" @click="closeMenu"></div>
+                <div class="absolute inset-0 bg-black/40 h-screen" @click="closeMenu"></div>
 
-                <div class="relative z-10 w-2/3 max-w-xs h-full bg-white shadow-xl flex flex-col justify-between p-4">
+                <div class="relative z-10 w-2/3 max-w-xs h-screen bg-white shadow-xl flex flex-col justify-between p-4">
                     <Wrapper class="flex flex-col gap-y-2">
                         <MenuItem :items="listDataMenu"
                             class="border-b border-b-black/30 hover:bg-secondary hover:text-light-accent transition-colors duration-300 px-2">
