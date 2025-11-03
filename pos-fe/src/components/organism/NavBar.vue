@@ -21,12 +21,16 @@ let lastScroll = 0
 
 const handleScroll = () => {
     const currentScroll = window.scrollY
-    if (currentScroll > lastScroll && currentScroll > 60) {
-        isHidden.value = true
+    if (window.innerWidth >= 768) {
+        if (currentScroll > lastScroll && currentScroll > 60) {
+            isHidden.value = true
+        } else {
+            isHidden.value = false
+        }
+        lastScroll = currentScroll
     } else {
         isHidden.value = false
     }
-    lastScroll = currentScroll
 }
 
 onMounted(() => {
