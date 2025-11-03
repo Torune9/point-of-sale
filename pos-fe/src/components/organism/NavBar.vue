@@ -1,16 +1,39 @@
 <template>
-    <nav class="fixed h-18 w-full flex flex-row justify-between items-center px-4 bg-white z-50 shadow-md">
+    <nav class="fixed h-18 w-full flex flex-row justify-between items-center px-4 bg-white z-50 shadow-sm transition-all duration-300"
+        :class="isHidden ? '-translate-y-full' : 'translate-y-0'">
         <div>
             <div class="w-36">
                 <img :src="logo" alt="navbar logo image" class="w-full h-full object-cover invert">
             </div>
         </div>
-        <LandingNavbar/>
+        <LandingNavbar />
     </nav>
 </template>
 
 <script setup>
 import logo from "@/assets/images/logo.png"
-import { ref } from "vue"
 import LandingNavbar from "@/components/molecules/LandingNavbar.vue"
+
+import { ref, onMounted, onUnmounted } from "vue"
+
+const isHidden = ref(false)
+let lastScroll = 0
+
+const handleScroll = () => {
+    const currentScroll = window.scrollY
+    if (currentScroll > lastScroll && currentScroll > 60) {
+        isHidden.value = true
+    } else {
+        isHidden.value = false
+    }
+    lastScroll = currentScroll
+}
+
+onMounted(() => {
+    window.addEventListener("scroll", handleScroll)
+})
+
+onUnmounted(() => {
+    window.removeEventListener("scroll", handleScroll)
+})
 </script>
