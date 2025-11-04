@@ -6,7 +6,7 @@
                 <img :src="logo" alt="navbar logo image" class="w-full h-full object-cover invert">
             </div>
         </div>
-        <LandingNavbar />
+        <LandingNavbar/>
     </nav>
 </template>
 
