@@ -22,11 +22,20 @@
             </div>
         </header>
 
-        <aside class="h-screen w-64 fixed bg-gray-100 transition-all duration-300 lg:sticky lg:top-0 lg:translate-x-0 lg:row-start-1 lg:row-span-2" :class="isShow ? 'translate-x-0' : '-translate-x-full'">
-            <button class="absolute top-1/2 left-full bg-gray-200 p-1 lg:hidden" @click="showSideBar">
-                show
+        <aside class="scroll-hidden z-1 h-screen lg:overflow-hidden w-64 fixed bg-gray-100 transition-all duration-300 lg:sticky lg:top-0 lg:translate-x-0 lg:row-start-1 lg:row-span-2 box-border" :class="isShow ? 'translate-x-0' : '-translate-x-full'">
+            <button class="absolute top-1/2 left-full bg-primary text-white rounded-tr rounded-br p-1 lg:hidden" @click="showSideBar">
+                <Icon icon="heroicons:arrow-right-20-solid" class="transition-all duration-500" :class="isShow ? 'rotate-y-180' : 'rotate-y-0'"/>
             </button>
+            <div class="p-4">
+                <h1 class="bg-white font-medium capitalize h-full p-2 rounded-2xl shadow">
+                    Hi, Stephanie 😊
+                </h1>
+            </div>
+            <div class="overflow-y-auto p-2 h-full">
+                <MultiMenu :menu="listMenu"/>
+            </div>
         </aside>
+        <Overlay v-if="isShow" @click="showSideBar" class="lg:hidden"/>
 
         <main class="lg:col-start-2 lg:row-span-2 p-2 ">
             <slot />
@@ -35,10 +44,28 @@
 </template>
 
 <script setup lang="ts">
+import Item from '@/components/atom/Item.vue';
+import Overlay from '@/components/atom/Overlay.vue';
+import Wrapper from '@/components/atom/Wrapper.vue';
+import MultiMenu from '@/components/molecules/MultiMenu.vue';
+import sideMenuList from '@/data/sidebarMenu.json'
+import { SubMenu } from '@/types/Menu';
 import { Ref, ref } from 'vue';
+
+const listMenu : Ref<SubMenu[]> = ref(sideMenuList as SubMenu[])
 
 const isShow: Ref<boolean> = ref(false)
 const showSideBar = ()=>{
     isShow.value = !isShow.value
 }
 </script>
+
+<style scoped>
+::-webkit-scrollbar{
+    width: 1px;
+}
+
+::-webkit-scrollbar-thumb{
+    background-color: rgba(0, 0, 0, 0.2);
+}
+</style>
