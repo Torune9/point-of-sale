@@ -1,0 +1,74 @@
+[
+    {
+        "name" : "dashboard",
+        "path" : "/dashboard",
+        "icon" : "heroicons:squares-2x2-16-solid"
+    },
+    {
+        "name" : "finance",
+        "icon" : "heroicons:swatch-16-solid",
+        "items" : [
+            {
+                "name" : "example1",
+                "path" : "#",
+                "icon" : ""
+            },
+            {
+                "name" : "example2",
+                "path" : "#",
+                "icon" : ""
+            },
+            {
+                "name" : "example3",
+                "path" : "#",
+                "icon" : ""
+            },
+            {
+                "name" : "example4",
+                "path" : "#",
+                "icon" : ""
+            }
+        ]
+    },
+    {
+        "name" : "inventory",
+        "icon" : "heroicons:inbox-stack-20-solid",
+        "items" : [
+            {
+                "name" : "example1",
+                "path" : "#",
+                "icon" : ""
+            },
+            {
+                "name" : "example2",
+                "path" : "#",
+                "icon" : ""
+            },
+            {
+                "name" : "example3",
+                "path" : "#",
+                "icon" : ""
+            },
+            {
+                "name" : "example4",
+                "path" : "#",
+                "icon" : ""
+            }
+        ]
+    },
+    {
+        "name" : "people",
+        "icon" : "heroicons:user-group-solid",
+        "path" : "/people"
+    },
+    {
+        "name" : "product",
+        "icon" : "heroicons:rectangle-group-20-solid",
+        "path" : "/product"
+    },
+    {
+        "name" : "category",
+        "icon" : "heroicons:squares-plus-solid",
+        "path" : "/category"
+    }
+]
