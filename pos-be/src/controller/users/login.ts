@@ -29,13 +29,19 @@ const ownerLogin = async (req: Request, res: Response) => {
 
         const tokenPayload = {
             id: users.id,
-            email: users.email,
             roleId: users.roleId
+        }
+
+        const publicDataUser = {
+            id: users.id,
+            username: users.username,
+            email: users.email,
         }
 
         const token = generateToken(tokenPayload)
         return res.json({
             message: 'login success',
+            data: publicDataUser,
             token,
             code: res.statusCode
         })
