@@ -1,10 +1,9 @@
 <template>
     <!-- Headline -->
-    <section
-        class="h-screen flex flex-row">
-        <div class="flex flex-col gap-y-8 justify-center items-center font-roboto h-full lg:px-20 box-border lg:items-start sm:px-16 px-4">
-            <div class="w-full flex flex-col gap-y-8 text-center lg:text-start">
-                <h1 class="text-4xl font-medium">
+    <section class="flex flex-col lg:flex-row gap-x-16 content">
+        <div class="flex flex-col gap-y-8 justify-center items-center font-roboto h-screen">
+            <div class="w-full flex flex-col gap-y-8  lg:text-start">
+                <h1 class="text-5xl lg:text-6xl">
                     Kelola Penjualan & Stok Lebih Mudah dengan EntryPOS
                 </h1>
                 <h2>
@@ -12,7 +11,7 @@
                     memantau stok, dan melihat laporan semua dalam satu dashboard yang mudah digunakan.
                 </h2>
             </div>
-            <div>
+            <div class="lg:w-full">
                 <BaseButton typeBtn="cta">
                     <template #title-btn>
                         Pakai sekarang
@@ -20,14 +19,15 @@
                 </BaseButton>
             </div>
         </div>
-        <div class="w-full max-lg:hidden">
-            <div class="h-full">
-                <img src="../assets/images/hero.jpg" alt="orang sedang memegang struk di depan mesin kasir" class="h-full w-full object-cover">
+        <div class="w-full flex justify-center items-center max-lg:hidden">
+            <div class=" rounded overflow-hidden h-[90%]">
+                <img src="../assets/images/hero.jpg" alt="orang sedang memegang struk di depan mesin kasir"
+                    class="h-full w-full object-cover">
             </div>
         </div>
     </section>
     <!-- Content -->
-    <section class="flex flex-col gap-y-4 p-4 lg:px-20 sm:px-16">
+    <section class="flex flex-col gap-y-4 content">
         <Title tag="h1">
             Tentang Kami
         </Title>
@@ -41,7 +41,7 @@
         </div>
     </section>
     <!-- Fitur -->
-    <section class="flex flex-col gap-y-4 p-4 lg:px-20 sm:px-16">
+    <section class="flex flex-col gap-y-4 content">
         <Title tag="h1">
             Fitur
         </Title>
