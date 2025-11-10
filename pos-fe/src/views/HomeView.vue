@@ -1,7 +1,7 @@
 <template>
     <!-- Headline -->
     <section class="flex flex-col lg:flex-row gap-x-16 content">
-        <div class="flex flex-col gap-y-8 justify-center items-center font-roboto h-screen">
+        <div class="flex flex-col gap-y-8 justify-center items-center font-roboto sm:h-screen py-8 sm:py-0">
             <div class="w-full flex flex-col gap-y-8  lg:text-start">
                 <h1 class="text-5xl lg:text-6xl">
                     Kelola Penjualan & Stok Lebih Mudah dengan EntryPOS
