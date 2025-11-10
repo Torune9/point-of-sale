@@ -1,5 +1,5 @@
 <template>
-    <nav class="fixed h-18 w-full flex flex-row justify-between items-center px-4 bg-white z-50 shadow-sm transition-all duration-300"
+    <nav class="h-18 w-full flex flex-row justify-between items-center px-8 bg-white z-50 transition-all duration-300"
         :class="isHidden ? '-translate-y-full' : 'translate-y-0'">
         <div>
             <div class="w-36">
