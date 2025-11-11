@@ -11,6 +11,14 @@ const ownerLogin = async (req: Request, res: Response) => {
         const users = await prisma.user.findFirst({
             where: {
                 email
+            },
+            include: {
+                business: {
+                    select: {
+                        id: true,
+                        name: true,
+                    }
+                },
             }
         })
         if (!users) {
@@ -43,6 +51,7 @@ const ownerLogin = async (req: Request, res: Response) => {
             message: 'login success',
             data: publicDataUser,
             token,
+            business: users.business,
             code: res.statusCode
         })
 
@@ -61,7 +70,15 @@ const workerLogin = async (req: Request, res: Response) => {
         const { email, password } = req.body
 
         const worker = await prisma.worker.findUnique({
-            where: { email }
+            where: { email },
+            include: {
+                business: {
+                    select: {
+                        id: true,
+                        name: true,
+                    }
+                },
+            }
         })
 
         if (!worker) {
@@ -83,12 +100,20 @@ const workerLogin = async (req: Request, res: Response) => {
             roleId: worker.roleId
         }
 
+        const publicDataUser = {
+            id: worker.id,
+            username: worker.username,
+            email: worker.email,
+        }
+
 
         const token = generateToken(tokenPayload)
 
         return res.json({
             message: "Login success",
             token,
+            data: publicDataUser,
+            business: worker.business,
         })
     } catch (error) {
         return res.status(500).json({ message: "Server error", error })
