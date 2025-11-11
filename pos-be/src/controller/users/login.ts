@@ -23,7 +23,7 @@ const ownerLogin = async (req: Request, res: Response) => {
 
         if (!matchPassword) {
             return res.status(400).json({
-                message: 'wrong password'
+                message: 'wrong email or password'
             })
         }
 
@@ -74,7 +74,7 @@ const workerLogin = async (req: Request, res: Response) => {
 
         if (!isValid) {
             return res.status(401).json({
-                message: "wrong password"
+                message: "wrong email  password"
             })
         }
         const tokenPayload = {
