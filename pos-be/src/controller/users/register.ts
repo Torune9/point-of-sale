@@ -42,6 +42,14 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
                 email,
                 password: hashPassword,
                 roleId: role.id
+            },
+            include: {
+                business: {
+                    select : {
+                        id : true,
+                        name : true,
+                    }
+                }
             }
         })
 
@@ -61,6 +69,7 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
         return res.status(201).json({
             message: 'account registered successfully',
             token,
+            business : user.business,
             data: publicDataUser,
             code: res.statusCode
         })
