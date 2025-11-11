@@ -3,6 +3,7 @@ import prisma from "../../utils/prisma.js";
 import { isPrismaError } from "../../utils/isPrismaError.js";
 import { isEmailTaken } from "../../helper/isEmailTaken.js";
 import bcrypt from "bcrypt"
+import { generateToken } from "../../utils/jwt.js";
 
 export const register = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -44,9 +45,24 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
             }
         })
 
-        return res.json({
+        const tokenPayload = {
+            id: user.id,
+            roleId: user.roleId
+        }
+
+        const publicDataUser = {
+            id: user.id,
+            username: user.username,
+            email: user.email,
+        }
+
+        const token = generateToken(tokenPayload)
+
+        return res.status(201).json({
             message: 'account registered successfully',
-            data: user,
+            token,
+            data: publicDataUser,
+            code: res.statusCode
         })
     } catch (error) {
         if (isPrismaError(error)) {
