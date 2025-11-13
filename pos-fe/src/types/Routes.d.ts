@@ -1,10 +1,14 @@
 import { Component } from "vue";
 
-export interface RoutesType {
+interface BaseRoute {
     name: string,
     path: string,
-    component: Component,
+    component?: Component,
     meta?: {
-        layout : string
+        layout: string
     }
+}
+
+export interface ChildRouteType extends BaseRoute {
+    children?: BaseRoute[]
 }
