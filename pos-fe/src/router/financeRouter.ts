@@ -1,4 +1,4 @@
-import { ChildRouteType } from "@/types/Routes";
+import { ChildRouteType } from "@/types/routes";
 import CashFlowView from "@/views/main/finance/CashFlowView.vue";
 
 export const financeRouter: ChildRouteType[] = [

@@ -1,4 +1,4 @@
-import { BaseRoute } from "@/types/Routes";
+import { BaseRoute } from "@/types/routes";
 import LoginView from "@/views/auth/LoginView.vue";
 import RegisterView from "@/views/auth/RegisterView.vue";
 

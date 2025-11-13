@@ -3,9 +3,10 @@ import HomeView from "@/views/HomeView.vue";
 import { authRouter } from "./authRouter.js";
 import { mainRouter } from "./mainRouter.js";
 import NotFoundView from "@/views/NotFoundView.vue";
+import { financeRouter } from "./financeRouter.js";
 
 const router = createRouter({
-    history: createWebHistory(import.meta.env.VITE_BASE_URL),
+    history: createWebHistory(),
     routes: [
         {
             path: "/",
@@ -17,6 +18,7 @@ const router = createRouter({
         },
         ...authRouter,
         ...mainRouter,
+        ...financeRouter,
         {
             path: "/:pathMatch(.*)*",
             name: "notfound",

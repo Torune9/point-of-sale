@@ -1,4 +1,4 @@
-import { BaseRoute } from "@/types/Routes";
+import { BaseRoute } from "@/types/routes";
 import DashboardView from "@/views/main/DashboardView.vue";
 
 export const mainRouter : BaseRoute[] = [
