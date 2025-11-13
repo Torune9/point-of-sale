@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts">
-import { Menu } from '@/types/Menu';
+import { Menu } from '@/types/menu';
 import Item from '../atom/Item.vue';
 
 const props = defineProps<{
