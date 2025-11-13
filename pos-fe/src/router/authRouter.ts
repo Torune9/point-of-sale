@@ -1,8 +1,8 @@
-import { RoutesType } from "@/types/Routes";
+import { BaseRoute } from "@/types/Routes";
 import LoginView from "@/views/auth/LoginView.vue";
 import RegisterView from "@/views/auth/RegisterView.vue";
 
-export const authRouter: RoutesType[] = [
+export const authRouter: BaseRoute[] = [
     {
         name: 'login',
         path: '/sign-in',

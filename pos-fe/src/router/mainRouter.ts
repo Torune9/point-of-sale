@@ -1,10 +1,13 @@
-import { RoutesType } from "@/types/Routes";
+import { BaseRoute } from "@/types/Routes";
 import DashboardView from "@/views/main/DashboardView.vue";
 
-export const mainRouter : RoutesType[] = [
+export const mainRouter : BaseRoute[] = [
     {
         name : 'dashboard',
         path : '/dashboard',
-        component : DashboardView
+        component : DashboardView,
+        meta : {
+            layout : "main"
+        }
     }
 ]
