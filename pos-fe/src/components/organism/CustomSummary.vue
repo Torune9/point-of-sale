@@ -26,7 +26,7 @@
 import { computed, ref } from "vue"
 import Title from "../atom/Title.vue";
 import Text from "../atom/Text.vue";
-import { Summary } from "@/types/Summary";
+import { Summary } from "@/types/summary";
 
 const props = defineProps<{
     datas: Summary[]

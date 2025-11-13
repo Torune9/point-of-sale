@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import Item from '../atom/Item.vue'
 import Wrapper from '../atom/Wrapper.vue'
-import type { SubMenu } from '@/types/Menu'
+import type { SubMenu } from '@/types/menu'
 
 const props = defineProps<{ menu: SubMenu[] }>()
 

@@ -1,5 +1,5 @@
 <template>
-    <div class="h-screen grid grid-rows-[auto_1fr] lg:grid-cols-[auto_1fr]">
+    <div class="min-h-screen grid grid-rows-[auto_1fr] lg:grid-cols-[auto_1fr]">
 
         <header class="p-2 lg:col-start-2 sticky top-0">
             <div class="flex justify-between items-center p-2 bg-gray-100 rounded-2xl">
@@ -44,12 +44,10 @@
 </template>
 
 <script setup lang="ts">
-import Item from '@/components/atom/Item.vue';
 import Overlay from '@/components/atom/Overlay.vue';
-import Wrapper from '@/components/atom/Wrapper.vue';
 import MultiMenu from '@/components/molecules/MultiMenu.vue';
 import sideMenuList from '@/data/sidebarMenu.json'
-import { SubMenu } from '@/types/Menu';
+import { SubMenu } from '@/types/menu';
 import { Ref, ref } from 'vue';
 
 const listMenu : Ref<SubMenu[]> = ref(sideMenuList as SubMenu[])

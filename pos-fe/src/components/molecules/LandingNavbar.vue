@@ -43,7 +43,7 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import { Menu } from '@/types/Menu'
+import { Menu } from '@/types/menu'
 import BurgerBtn from '../atom/BurgerBtn.vue'
 import MenuItem from './MenuItem.vue'
 import Wrapper from '../atom/Wrapper.vue'
