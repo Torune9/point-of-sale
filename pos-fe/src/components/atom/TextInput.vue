@@ -14,7 +14,7 @@
 import { ErrorObject } from '@vuelidate/core';
 
 const props = withDefaults(defineProps<{
-    label: string,
+    label?: string,
     type?: 'text' | 'password',
     errorMessage?: Array<ErrorObject> | null
 }>(), {
