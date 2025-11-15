@@ -33,24 +33,36 @@
                 </div>
             </form>
         </div>
+        <Transition name="fade">
+            <Overlay v-if="isLoading">
+                <div class="w-full h-full flex justify-center items-center backdrop-blur-xs">
+                    <Spinner fill-colors="yellow" />
+                </div>
+            </Overlay>
+        </Transition>
     </div>
+
 </template>
 
 <script setup lang="ts">
 import Title from '@/components/atom/Title.vue';
 import TextInput from '@/components/atom/TextInput.vue';
-import { ref, reactive, computed } from 'vue';
+import { ref, reactive, computed, Ref } from 'vue';
 import useVuelidate from '@vuelidate/core';
 import { required, minLength, email } from '@vuelidate/validators';
 import BaseButton from '@/components/atom/BaseButton.vue';
+import { DataRegister } from '@/types/payloads/auth';
+import Overlay from '@/components/atom/Overlay.vue';
+import Spinner from '@/components/atom/Spinner.vue';
+import { userStore } from '@/stores/userStore';
+import { useRouter } from 'vue-router';
 
-interface DataLogin {
-    username: string,
-    email: string,
-    password: string
-}
+const isLoading = ref<boolean>(false)
+const router = useRouter()
 
-const formModel: DataLogin = reactive({
+const storeUser = userStore()
+
+const formModel = reactive<DataRegister>({
     username: '',
     email: '',
     password: '',
@@ -73,10 +85,23 @@ const rules = computed(() => ({
 
 const v$ = useVuelidate(rules, formModel)
 
-const submit = () => {
+const submit = async () => {
     v$.value.$touch()
     if (v$.value.$invalid) {
         return
+    }
+
+    isLoading.value = !isLoading.value
+    try {
+        await storeUser.userRegister(formModel)
+        router.push({
+            name: 'dashboard'
+        })
+    } catch (error) {
+        console.log(error);
+
+    } finally {
+        isLoading.value = !isLoading.value
     }
 }
 </script>
