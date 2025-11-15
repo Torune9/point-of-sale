@@ -9,23 +9,23 @@
         "icon" : "heroicons:swatch-16-solid",
         "items" : [
             {
-                "name" : "example1",
-                "path" : "#",
+                "name" : "cash flow",
+                "path" : "/finance/cash-flow",
                 "icon" : ""
             },
             {
                 "name" : "example2",
-                "path" : "#",
+                "path" : "''",
                 "icon" : ""
             },
             {
                 "name" : "example3",
-                "path" : "#",
+                "path" : "''",
                 "icon" : ""
             },
             {
                 "name" : "example4",
-                "path" : "#",
+                "path" : "''",
                 "icon" : ""
             }
         ]
@@ -36,22 +36,22 @@
         "items" : [
             {
                 "name" : "example1",
-                "path" : "#",
+                "path" : "''",
                 "icon" : ""
             },
             {
                 "name" : "example2",
-                "path" : "#",
+                "path" : "''",
                 "icon" : ""
             },
             {
                 "name" : "example3",
-                "path" : "#",
+                "path" : "''",
                 "icon" : ""
             },
             {
                 "name" : "example4",
-                "path" : "#",
+                "path" : "''",
                 "icon" : ""
             }
         ]
