@@ -5,19 +5,19 @@
 @theme {
     --font-inter : "Inter", sans-serif;
 
-    --color-primary: #2B3467;
-    --color-secondary: #EB455F;
-    --color-accent: #BAD7E9;
-    --color-light-accent :#FCFFE7; 
+    --color-primary: #7A4179;
+    --color-secondary: #DFCBEB;
+    --color-accent: #BBB791;
+    --color-light-accent :#E4F0C0; 
 
-}
-
-main {
-    font-family: "Stack Sans Text", sans-serif;
 }
 
 :root {
     interpolate-size: allow-keywords;
+}
+
+main {
+    font-family: "Stack Sans Text", sans-serif;
 }
 
 .wrapper {
