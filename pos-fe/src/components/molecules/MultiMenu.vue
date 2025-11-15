@@ -1,3 +1,43 @@
+<template>
+    <Wrapper>
+        <Item v-for="(item, i) in props.menu" :key="i"
+            class="cursor-pointer select-none capitalize p-1 font-medium" :class="$attrs" @click="">
+            <!-- Jika tidak ada submenu, langsung ke router -->
+            <RouterLink exact-active-class="bg-secondary/20"  v-if="!item.items" :to="item.path || '#'"
+                class="block p-2 hover:bg-secondary hover:text-black/70 transition-colors duration-300 border-b border-secondary/20">
+                <span class="flex items-center gap-x-2">
+                    <Icon :icon="item.icon" /> {{ item.name }}
+                </span>
+            </RouterLink>
+            <div v-else>
+
+            </div>
+
+            <!-- Jika punya submenu -->
+            <div v-if="item.items" class="flex flex-col gap-2">
+                <div class="flex justify-between items-center p-2 hover:bg-secondary hover:text-black/70 transition-colors duration-300 border-b border-secondary/20"
+                    @click.stop="toggleSubMenu(i)" > 
+                    <span class="flex items-center gap-x-2">
+                        <Icon :icon="item.icon" /> {{ item.name }}
+                    </span>
+                    <Icon icon="heroicons:chevron-down" class="transition-transform duration-300"
+                        :class="{ 'rotate-180': isOpen(i) }" />
+                </div>
+
+                <transition name="fade">
+                    <div v-if="isOpen(i)"
+                        class="px-6 flex flex-col gap-1 text-sm overflow-hidden font-[500]" :class="$attrs">
+                        <RouterLink exact-active-class="bg-secondary/20" v-for="(sub, j) in item.items" :key="j" :to="sub.path || ''"
+                            class="p-1.5 hover:bg-secondary   hover:text-black/70 transition-colors duration-200 rounded">
+                            {{ sub.name }}
+                        </RouterLink>
+                    </div>
+                </transition>
+            </div>
+        </Item>
+    </Wrapper>
+</template>
+
 <script setup lang="ts">
 import { ref } from 'vue'
 import Item from '../atom/Item.vue'
@@ -14,47 +54,12 @@ const toggleSubMenu = (index: number) => {
 }
 
 const isOpen = (index: number) => openMenus.value.get(index) === true
+const activeMenuIdx = ref<number|null>(null)
+const selectActiveMenu = (idx:number)=>{
+    activeMenuIdx.value = idx
+}
 </script>
 
-<template>
-    <Wrapper>
-        <Item v-for="(item, i) in props.menu" :key="i"
-            class="cursor-pointer select-none capitalize p-1 font-medium" :class="$attrs">
-            <!-- Jika tidak ada submenu, langsung ke router -->
-            <RouterLink v-if="!item.items" :to="item.path || '#'"
-                class="block p-2 rounded hover:bg-accent hover:text-black/70 transition-colors duration-300">
-                <span class="flex items-center gap-x-2">
-                    <Icon :icon="item.icon" /> {{ item.name }}
-                </span>
-            </RouterLink>
-            <div v-else>
-
-            </div>
-
-            <!-- Jika punya submenu -->
-            <div v-if="item.items">
-                <div class="flex justify-between items-center p-2 rounded hover:bg-accent hover:text-black/70 transition-colors duration-300"
-                    @click.stop="toggleSubMenu(i)" > 
-                    <span class="flex items-center gap-x-2">
-                        <Icon :icon="item.icon" /> {{ item.name }}
-                    </span>
-                    <Icon icon="heroicons:chevron-down" class="transition-transform duration-300"
-                        :class="{ 'rotate-180': isOpen(i) }" />
-                </div>
-
-                <transition name="fade">
-                    <div v-if="isOpen(i)"
-                        class="px-6 flex flex-col gap-1 text-sm text-black/80 overflow-hidden font-normal">
-                        <RouterLink v-for="(sub, j) in item.items" :key="j" :to="sub.path || '#'"
-                            class="p-1.5 hover:bg-accent transition-colors duration-200 rounded">
-                            {{ sub.name }}
-                        </RouterLink>
-                    </div>
-                </transition>
-            </div>
-        </Item>
-    </Wrapper>
-</template>
 
 <style scoped>
 .fade-enter-active,
