@@ -19,10 +19,10 @@ const isOpen = (index: number) => openMenus.value.get(index) === true
 <template>
     <Wrapper>
         <Item v-for="(item, i) in props.menu" :key="i"
-            class="cursor-pointer select-none capitalize p-1 font-medium text-black/80">
+            class="cursor-pointer select-none capitalize p-1 font-medium" :class="$attrs">
             <!-- Jika tidak ada submenu, langsung ke router -->
             <RouterLink v-if="!item.items" :to="item.path || '#'"
-                class="block p-2 rounded hover:bg-gray-300 hover:text-black/90 transition-colors duration-300">
+                class="block p-2 rounded hover:bg-accent hover:text-black/70 transition-colors duration-300">
                 <span class="flex items-center gap-x-2">
                     <Icon :icon="item.icon" /> {{ item.name }}
                 </span>
@@ -33,7 +33,7 @@ const isOpen = (index: number) => openMenus.value.get(index) === true
 
             <!-- Jika punya submenu -->
             <div v-if="item.items">
-                <div class="flex justify-between items-center p-2 rounded hover:bg-gray-300 hover:text-black/90 transition-colors duration-300"
+                <div class="flex justify-between items-center p-2 rounded hover:bg-accent hover:text-black/70 transition-colors duration-300"
                     @click.stop="toggleSubMenu(i)" > 
                     <span class="flex items-center gap-x-2">
                         <Icon :icon="item.icon" /> {{ item.name }}
@@ -46,7 +46,7 @@ const isOpen = (index: number) => openMenus.value.get(index) === true
                     <div v-if="isOpen(i)"
                         class="px-6 flex flex-col gap-1 text-sm text-black/80 overflow-hidden font-normal">
                         <RouterLink v-for="(sub, j) in item.items" :key="j" :to="sub.path || '#'"
-                            class="p-1.5 hover:bg-gray-300 transition-colors duration-200 rounded">
+                            class="p-1.5 hover:bg-accent transition-colors duration-200 rounded">
                             {{ sub.name }}
                         </RouterLink>
                     </div>
