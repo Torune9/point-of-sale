@@ -22,7 +22,7 @@
             </div>
         </header>
 
-        <aside class="scroll-hidden z-50 h-screen lg:overflow-hidden w-64 fixed bg-primary transition-all duration-300 lg:sticky lg:top-0 lg:translate-x-0 lg:row-start-1 lg:row-span-2 box-border" :class="isShow ? 'translate-x-0' : '-translate-x-full'">
+        <aside class="scroll-hidden z-50 h-screen lg:overflow-hidden w-64 fixed bg-primary transition-all duration-300 lg:sticky lg:top-0 lg:translate-x-0 lg:row-start-1 lg:row-span-2 box-border flex flex-col gap-y-2" :class="isShow ? 'translate-x-0' : '-translate-x-full'">
             <button class="absolute top-1/2 left-full bg-primary text-white rounded-tr rounded-br p-1 lg:hidden" @click="showSideBar">
                 <Icon icon="heroicons:arrow-right-20-solid" class="transition-all duration-500" :class="isShow ? 'rotate-y-180' : 'rotate-y-0'"/>
             </button>
@@ -34,10 +34,19 @@
             <div class="overflow-y-auto p-2 h-full">
                 <MultiMenu :menu="listMenu" class="text-white/80"/>
             </div>
+            <div class="px-3 h-32">
+                <RouterLink to="#" class="capitalize flex flex-row gap-x-2 items-center font-semibold text-secondary border-b border-b-secondary/30 p-2 hover:bg-secondary hover:text-black/80 transition-colors duration-300">
+                    <Icon icon="heroicons:cog-6-tooth"/>
+                    <span>
+                        Settings
+                    </span>
+                </RouterLink>
+            </div>
         </aside>
         <Overlay v-if="isShow" @click="showSideBar" class="lg:hidden z-30"/>
 
         <main class="lg:col-start-2 lg:row-span-2 p-2 w-full overflow-hidden">
+            <!-- <BusinessMaker/> -->
             <slot />
         </main>
     </div>
@@ -46,6 +55,7 @@
 <script setup lang="ts">
 import Overlay from '@/components/atom/Overlay.vue';
 import MultiMenu from '@/components/molecules/MultiMenu.vue';
+import BusinessMaker from '@/components/organism/BusinessMaker.vue';
 import sideMenuList from '@/data/sidebarMenu.json'
 import { SubMenu } from '@/types/menu';
 import { Ref, ref } from 'vue';
@@ -60,10 +70,11 @@ const showSideBar = ()=>{
 
 <style scoped>
 ::-webkit-scrollbar{
-    width: 1px;
+    width: 2px;
 }
 
 ::-webkit-scrollbar-thumb{
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: #DFCBEB;
+    border-radius: 20%;
 }
 </style>
