@@ -90,7 +90,7 @@ const workerLogin = async (req: Request, res: Response) => {
         const isValid = await bcrypt.compare(password, worker.password)
 
         if (!isValid) {
-            return res.status(401).json({
+            return res.status(400).json({
                 message: "wrong email  password"
             })
         }
