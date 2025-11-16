@@ -1,5 +1,5 @@
 <template>
-    <div class="min-h-screen grid grid-rows-[auto_1fr] lg:grid-cols-[auto_1fr]">
+    <div class="min-h-screen w-full grid grid-rows-[auto_1fr] lg:grid-cols-[auto_1fr]">
 
         <header class="p-2 lg:col-start-2 sticky top-0 z-20">
             <div class="flex justify-between items-center p-2 bg-secondary border border-primary/30 rounded-2xl">
@@ -37,7 +37,7 @@
         </aside>
         <Overlay v-if="isShow" @click="showSideBar" class="lg:hidden z-30"/>
 
-        <main class="lg:col-start-2 lg:row-span-2 p-2 ">
+        <main class="lg:col-start-2 lg:row-span-2 p-2 w-full overflow-hidden">
             <slot />
         </main>
     </div>
