@@ -1,37 +1,22 @@
-import type { NextFunction, Request, Response } from "express";
-import prisma from "../utils/prisma.js";
-import type { JwtPayload } from "jsonwebtoken";
-import { handleJwtError } from "../utils/jwtError.js";
-import { verifyToken } from "../utils/jwt.js";
+import type { NextFunction, Request, Response } from "express"
+import { handleJwtError } from "../utils/jwtError.js"
+import { roleCheck } from "../helper/roleCheck.js"
 
 export const adminAuth = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const [scheme, token] = (req.get('Authorization') ?? '').split(' ');
+        const [scheme, token] = (req.get("Authorization") ?? "").split(" ")
 
-        const dataVerified = verifyToken(token as string) as JwtPayload
+        const result = await roleCheck(token as string, "admin")
 
-        const role = await prisma.role.findFirst({
-            where: {
-                id: dataVerified.roleId
-            }
-        })
-
-        if (!role) {
-            return res.status(404).json({
-                message: 'role not found'
-            })
-        }
-
-        const isAdmin = role.name.toLowerCase() == 'admin'
-
-        if (!isAdmin) {
-            return res.status(400).json({
-                message: 'not authorize',
-                code: res.statusCode
+        if (!result.ok) {
+            return res.status(result.code as number).json({
+                message : result.message,
+                code : result.code
             })
         }
 
         next()
+
     } catch (error) {
         return handleJwtError(error, res)
     }
