@@ -12,4 +12,4 @@ roleRouter.get('/', getRoles)
 
 roleRouter.post('/', validateData(Role), adminAuth, createRole)
 
-roleRouter.patch('/:id', validateData(Role), updateRole)
+roleRouter.patch('/:id', validateData(Role),adminAuth, updateRole)
