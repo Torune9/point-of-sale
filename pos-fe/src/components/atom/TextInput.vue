@@ -3,7 +3,7 @@
         <label :for="label" class="font-medium capitalize">
             {{ label }}
         </label>
-        <input :type="type" :name="label" :id="label" class="border border-black/50 focus:outline-primary px-2 rounded-lg py-2 hover:outline-1 hover:outline-accent transition-all duration-500" v-model="model">
+        <input :type="type" :name="label" :id="label" class="border border-black/50 focus:outline-primary px-2 rounded-lg py-2 hover:outline-1 hover:outline-accent transition-all duration-500" v-model="model" :placeholder="placeholder">
         <small class="text-red-700">
             {{ errorMessage ? errorMessage[0].$message : '' }}
         </small>
@@ -16,7 +16,8 @@ import { ErrorObject } from '@vuelidate/core';
 const props = withDefaults(defineProps<{
     label?: string,
     type?: 'text' | 'password',
-    errorMessage?: Array<ErrorObject> | null
+    errorMessage?: Array<ErrorObject> | null,
+    placeholder? :string
 }>(), {
     type: 'text'
 })
