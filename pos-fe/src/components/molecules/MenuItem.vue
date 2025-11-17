@@ -1,6 +1,6 @@
 <template>
     <Item v-for="(item,idx) in items" :key="idx" v-bind="$attrs">
-        <RouterLink :to="`#${item.path}`" class="lg:text-lg font-medium w-full block py-2">
+        <RouterLink :to="`${item.path}`" class="font-medium w-full block p-2">
             {{ item.name }}
         </RouterLink>
     </Item>

@@ -9,12 +9,9 @@
                     <Icon :icon="item.icon" /> {{ item.name }}
                 </span>
             </RouterLink>
-            <div v-else>
-
-            </div>
-
+            
             <!-- Jika punya submenu -->
-            <div v-if="item.items" class="flex flex-col gap-2">
+            <div v-if="item.items" class="flex flex-col">
                 <div class="flex justify-between items-center p-2 hover:bg-secondary hover:text-black/70 transition-colors duration-300 border-b border-secondary/20"
                     @click.stop="toggleSubMenu(i)" > 
                     <span class="flex items-center gap-x-2">
@@ -26,10 +23,10 @@
 
                 <transition name="fade">
                     <div v-if="isOpen(i)"
-                        class="px-6 flex flex-col gap-1 text-sm overflow-hidden font-[500]" :class="$attrs">
+                        class="px-6 flex flex-col gap-1 text-sm overflow-hidden font-[500] mt-2" :class="$attrs">
                         <RouterLink exact-active-class="bg-secondary/20" v-for="(sub, j) in item.items" :key="j" :to="sub.path || ''"
-                            class="p-1.5 hover:bg-secondary   hover:text-black/70 transition-colors duration-200 rounded">
-                            {{ sub.name }}
+                            class="p-1.5 hover:bg-secondary   hover:text-black/70 transition-colors duration-200">
+                           <span>{{ sub.name }}</span>
                         </RouterLink>
                     </div>
                 </transition>
@@ -43,6 +40,7 @@ import { ref } from 'vue'
 import Item from '../atom/Item.vue'
 import Wrapper from '../atom/Wrapper.vue'
 import type { SubMenu } from '@/types/menu'
+import MenuItem from './MenuItem.vue';
 
 const props = defineProps<{ menu: SubMenu[] }>()
 
@@ -70,6 +68,7 @@ const selectActiveMenu = (idx:number)=>{
 .fade-enter-from,
 .fade-leave-to {
     opacity: 0;
-    height: 0;
+    height: 0px;
+    margin-top: 0px;
 }
 </style>
