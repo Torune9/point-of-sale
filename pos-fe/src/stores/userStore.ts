@@ -1,50 +1,47 @@
 import { notify } from "@/helper/toastifyHelper";
 import { api } from "@/services/apiService";
 import { DataLogin } from "@/types/payloads/auth";
+import { ResponseLogin } from "@/types/response";
 import { defineStore } from "pinia";
-
-interface ResponseLogin {
-    message: string,
-    business : object[]
-    token: string,
-    code: number,
-    data: object[]
-}
 
 export const userStore = defineStore('user', {
     state: () => ({
         token: null,
-        userData: null
+        userData: null,
+        userBusiness: null
     }),
     persist: true,
     actions: {
-        async userLogin(payload: DataLogin) {
+        async userRegister(payload: DataLogin) {
             try {
-                const response = await api.post('/auth/login', payload)
+                const response = await api.post('/auth/register', payload)
+
                 const dataResponse: ResponseLogin = response.data as ResponseLogin
-                
+
                 this.token = dataResponse.token
                 this.userData = dataResponse.data
 
                 notify.success(dataResponse.message)
 
-                return dataResponse
-
-            } catch (error) { 
+            } catch (error) {
                 notify.error(error.response.data.message)
                 throw error
             }
         },
-        async userRegister(payload: DataLogin) {
+        async login(payload: DataLogin,isWorker:boolean) {
             try {
-                const response = await api.post('/auth/register', payload)
-                
-                const dataResponse: ResponseLogin = response.data as ResponseLogin
+                const path = isWorker ? '/auth/login/worker' : '/auth/login'
+                const response = await api.post(path, payload)
 
-                this.token = dataResponse.token
-                this.userData = dataResponse.data
+                const result: ResponseLogin = response.data as ResponseLogin
 
-                notify.success(dataResponse.message)
+                this.token = result.token
+                this.userData = result.data
+                this.userBusiness = result.business
+
+                notify.success(result.message)
+
+                return result
 
             } catch (error) {
                 notify.error(error.response.data.message)
