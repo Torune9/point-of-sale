@@ -16,7 +16,7 @@
                     <label for="worker" class="order-2 cursor-pointer">
                         Isi kotak ini bila anda pekerja
                     </label>
-                    <input type="checkbox" name="worker" id="worker" class="w-4 h-4">
+                    <input type="checkbox" name="worker" id="worker" class="w-4 h-4" v-model="isWorker">
                 </div>
                 <BaseButton size="full" type="submit">
                     <template #title-btn>
@@ -82,7 +82,10 @@ const rules = computed(() => ({
     }
 }))
 
+const isWorker = ref<boolean>(false)
+
 const v$ = useVuelidate(rules, formModel)
+
 const storeUser = userStore()
 
 const submit = async () => {
@@ -92,7 +95,10 @@ const submit = async () => {
     }
     isLoading.value = !isLoading.value
     try {
-        await storeUser.userLogin(formModel)
+
+        const result = await storeUser.login(formModel,isWorker.value)
+        console.log(result);
+        
         
         router.push({
             name: 'dashboard'
