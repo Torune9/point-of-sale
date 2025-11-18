@@ -40,7 +40,7 @@
             </div>
             <div class="px-3 h-32">
                 <RouterLink to="#"
-                    class="capitalize flex flex-row gap-x-2 items-center font-semibold text-white/60 border-b border-b-secondary/30 p-2 hover:bg-accent hover:text-black/80 transition-colors duration-300">
+                    class="capitalize flex flex-row gap-x-2 items-center font-semibold rounded p-2 hover:bg-primary hover:text-white transition-colors duration-300">
                     <Icon icon="heroicons:cog-6-tooth" />
                     <span>
                         Settings
