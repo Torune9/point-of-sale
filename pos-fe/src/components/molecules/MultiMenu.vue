@@ -3,7 +3,7 @@
         <Item v-for="(item, i) in props.menu" :key="i"
             class="cursor-pointer select-none capitalize p-1 font-medium" :class="$attrs" @click="">
             <!-- Jika tidak ada submenu, langsung ke router -->
-            <RouterLink exact-active-class="bg-gray-200 border border-gray-300 text-primary/80"  v-if="!item.items" :to="item.path || '#'"
+            <RouterLink exact-active-class="bg-gray-200 outline outline-gray-300 text-primary/80"  v-if="!item.items" :to="item.path || '#'"
                 class="block p-2 hover:bg-primary text-black/80 hover:text-white transition-colors duration-300 rounded">
                 <span class="flex items-center gap-x-2">
                     <Icon :icon="item.icon" /> {{ item.name }}
@@ -24,7 +24,7 @@
                 <transition name="fade">
                     <div v-if="isOpen(i)"
                         class="px-6 flex flex-col gap-1 overflow-hidden mt-2" :class="$attrs">
-                        <RouterLink exact-active-class="bg-gray-200 border border-gray-300 text-primary/80" v-for="(sub, j) in item.items" :key="j" :to="sub.path || ''"
+                        <RouterLink exact-active-class="bg-gray-200 outline outline-gray-300 text-primary/80" v-for="(sub, j) in item.items" :key="j" :to="sub.path || ''"
                             class="p-1.5 hover:bg-primary text-black/80 hover:text-white transition-colors duration-200 rounded">
                            <span>{{ sub.name }}</span>
                         </RouterLink>
