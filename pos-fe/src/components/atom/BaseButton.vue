@@ -43,7 +43,7 @@ const typeClass = computed<string>(() => {
         case 'success':
             return 'bg-green-700 hover:bg-green-600';
         case 'cta':
-            return 'bg-cta hover:bg-cta/80';
+            return 'bg-secondary hover:bg-secondary/80';
         default:
             return 'bg-primary hover:bg-primary/80'
     }
