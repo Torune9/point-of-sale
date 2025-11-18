@@ -20,7 +20,7 @@
         "items": [
             {
                 "name": "product",
-                "path": "/product"
+                "path": "/inventory/products"
             }
         ]
     },
