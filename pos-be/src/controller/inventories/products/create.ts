@@ -21,6 +21,7 @@ export const createProduct = async (req: Request, res: Response, next: NextFunct
         })
         const qrData = JSON.stringify({
             id: product.id,
+            sku: product.sku,
             name: product.name,
             price: product.price
         })

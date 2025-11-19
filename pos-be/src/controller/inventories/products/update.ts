@@ -1,6 +1,8 @@
 import type { NextFunction, Request, Response } from "express";
 import prisma from "../../../utils/prisma.js";
 import { isPrismaError } from "../../../utils/isPrismaError.js";
+import { cloudinaryImageDestroy, cloudinaryImageUpload } from "../../../utils/cloudinary.js";
+import QrCode from 'qrcode'
 
 export const updateProduct = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -20,10 +22,24 @@ export const updateProduct = async (req: Request, res: Response, next: NextFunct
                 code: res.statusCode,
             });
         }
+        if (existingProduct.barcode) {
+            await cloudinaryImageDestroy(existingProduct.id)
+        }
+
+        const qrData = JSON.stringify({
+            id: existingProduct.id,
+            sku: existingProduct.sku,
+            name: existingProduct.name,
+            price: existingProduct.price
+        })
+        const qrUrl = await QrCode.toDataURL(qrData)
+
+        const resultQrCode = await cloudinaryImageUpload(qrUrl, existingProduct.id)
 
         const updatedProduct = await prisma.product.update({
             where: { id: id as string },
             data: {
+                barcode : resultQrCode,
                 name: name ?? existingProduct.name,
                 stock:
                     stock !== undefined
@@ -35,6 +51,8 @@ export const updateProduct = async (req: Request, res: Response, next: NextFunct
                         : existingProduct.price,
             },
         });
+
+
 
         return res.json({
             message: "Product has been updated",
