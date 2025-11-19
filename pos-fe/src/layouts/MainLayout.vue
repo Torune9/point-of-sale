@@ -25,7 +25,7 @@
         <aside
             class="scroll-hidden z-50 h-screen lg:overflow-hidden w-64 fixed bg-gray-100 transition-all duration-300 lg:sticky lg:top-0 lg:translate-x-0 lg:row-start-1 lg:row-span-2 box-border flex flex-col gap-y-2"
             :class="isShow ? 'translate-x-0' : '-translate-x-full'">
-            <button class="absolute top-1/2 left-full bg-primary text-white rounded-tr rounded-br p-1 lg:hidden"
+            <button class="absolute top-1/2 left-full bg-primary text-white rounded-tr cursor-pointer hover:bg-secondary transition-colors rounded-br p-1 lg:hidden"
                 @click="showSideBar">
                 <Icon icon="heroicons:arrow-right-20-solid" class="transition-all duration-500"
                     :class="isShow ? 'rotate-y-180' : 'rotate-y-0'" />
