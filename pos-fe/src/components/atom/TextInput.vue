@@ -3,7 +3,7 @@
         <label :for="label" class="font-medium capitalize">
             {{ label }}
         </label>
-        <input :type="type" :name="label" :id="label" class="w-full border border-black/50 focus:outline-primary px-2 rounded-lg py-2 hover:outline-1 hover:outline-accent transition-all duration-500" v-model="model" :placeholder="placeholder">
+        <input :type="type" :name="label" :id="label" class="w-full border border-black/50 focus:outline-primary p-2 rounded-lg hover:outline-1 hover:outline-accent transition-all duration-500" v-model="model" :placeholder="placeholder">
         <small class="text-red-700">
             {{ errorMessage ? errorMessage[0].$message : '' }}
         </small>
