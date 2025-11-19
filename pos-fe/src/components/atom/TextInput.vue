@@ -22,5 +22,5 @@ const props = withDefaults(defineProps<{
     type: 'text'
 })
 
-const model = defineModel<string>({ required: true })
+const model = defineModel<string | number>({ required: true })
 </script>
