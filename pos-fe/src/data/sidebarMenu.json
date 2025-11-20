@@ -11,6 +11,10 @@
             {
                 "name": "cash flow",
                 "path": "/finance/cash-flow"
+            },
+            {
+                "name": "sales",
+                "path": "/finance/sales"
             }
         ]
     },
@@ -21,6 +25,10 @@
             {
                 "name": "product",
                 "path": "/inventory/products"
+            },
+            {
+                "name": "stock movements",
+                "path": "/inventory/stock-movements"
             }
         ]
     },
