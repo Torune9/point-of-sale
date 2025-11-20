@@ -4,6 +4,9 @@ interface BaseRoute {
     name: string,
     path: string,
     component?: Component,
+    redirect? : {
+        name : string
+    },
     meta?: {
         layout: string
     }
