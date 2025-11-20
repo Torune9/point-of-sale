@@ -46,7 +46,8 @@ main {
     opacity: 0;
 }
 
-.customize-all{
-   /* font-family: "Inter", sans-serif; */
- 
+.customize-table{
+   font-family: "Inter", sans-serif;
+   border-radius: 10px;
+   overflow: hidden;
 }
