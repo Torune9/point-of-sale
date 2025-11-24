@@ -14,7 +14,7 @@ const props = withDefaults(defineProps<{
     typeBtn?: 'danger' | 'info' | 'success' | 'cta',
     type?: 'submit' | 'button'
 }>()
-    , {
+    ,{
         type: 'button'
     })
 const sizeClass = computed<string>(() => {
@@ -30,7 +30,7 @@ const sizeClass = computed<string>(() => {
         case 'auto':
             return 'w-auto'
         default:
-            return 'w-40'
+            return 'w-36'
     }
 })
 
