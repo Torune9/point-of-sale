@@ -5,6 +5,11 @@
         "icon": "heroicons:squares-2x2-16-solid"
     },
     {
+        "name": "Transaction",
+        "path": "/transaction",
+        "icon": "heroicons:printer-16-solid"
+    },
+    {
         "name": "finance",
         "icon": "heroicons:swatch-16-solid",
         "items": [
