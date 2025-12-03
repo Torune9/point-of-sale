@@ -1,13 +1,13 @@
 <template>
     <div class="scanner inset-0 w-full h-full z-50 bg-black/10 fixed flex justify-center items-center" v-if="isActive">
-        <div v-if="isLoading">
+        <div v-if="isLoading" class="absolute">
             <Spinner />
         </div>
 
         <div id="reader" class="w-[360px] h-[260px]" :class="{
             'opacity-0': isLoading
         }"></div>
-        <div class="absolute top-8 right-8">
+        <div class="absolute top-8 right-8" v-if="!isLoading">
             <BaseButton type="button" size="auto" @click="stopScanner">
                 <template #title-btn>
                     <Icon icon="heroicons:x-mark-16-solid" class="text-2xl" />
@@ -51,6 +51,7 @@ async function startScanner() {
             { fps: 10, qrbox: { width: 300, height: 200 } },
             (decodedText: string) => {
                 emits('getData', decodedText)
+                stopScanner()
             },
             (errorMessage: any) => {
                 if (!errorMessage.includes("NotFoundException")) {
