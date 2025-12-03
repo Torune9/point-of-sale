@@ -8,24 +8,29 @@
                 <!-- Search input -->
                 <div class="flex flex-col gap-y-2 relative">
                     <label for="search">search</label>
+
                     <div class="flex flex-row border border-black/20 rounded-md hover:outline">
-                        <input type="text" id="search" v-model="search" list="product-list"
-                            class="p-2 w-full focus:outline-0" autocomplete="off" />
-                        <button class="border-l-0 px-2 cursor-pointer group" @click="triggerDropdownProduct"
-                            @blur="() => isOpen = false">
+                        <input  placeholder="search product..." type="text" id="search" v-model="search" list="product-list"
+                            class="p-2 w-full focus:outline-0" autocomplete="off" @blur="onBlur" />
+                        <button class="border-l-0 px-2 cursor-pointer group" @click="triggerDropdown">
                             <Icon icon="heroicons:chevron-down-16-solid" class="transition-all duration-300" :class="{
-                                'rotate-x-180': isOpen
+                                'rotate-x-180': isOpen || showDropdown
                             }" />
                         </button>
                     </div>
                     <!--List item -->
                     <Transition name="fade">
-                        <ul v-if="isListVisible" id="product-list"
+                        <ul v-if="showDropdown" id="product-list"
                             class="flex flex-col gap-y-2 absolute w-full z-50 bg-white top-full max-h-72 overflow-y-auto scroll p-2 shadow-md rounded-md">
                             <li @mousedown.prevent="selectItems(item)" v-for="item in filteredProducts" :key="item.id"
                                 class="cursor-pointer p-2 rounded-md hover:bg-gray-100 transition-colors duration-300">
-                                {{ item.name }}
+                                <span>
+                                    {{ item.name }}
+                                </span>
                             </li>
+                            <span v-if="filteredProducts.length == 0">
+                                not found
+                            </span>
                         </ul>
                     </Transition>
                 </div>
@@ -111,6 +116,7 @@
 
 <script setup lang="ts">
 import BaseButton from '@/components/atom/BaseButton.vue';
+import Spinner from '@/components/atom/Spinner.vue';
 import TextInput from '@/components/atom/TextInput.vue';
 import Title from '@/components/atom/Title.vue';
 import BarcodeScanner from '@/components/molecules/BarcodeScanner.vue';
@@ -209,13 +215,9 @@ const products = [
     },
 ]
 
-const search = ref<string>('')
 const quantity = ref<number>(1)
 const paidAmount = ref<string>('')
-const selectedItem = ref(null)
-const isOpen = ref<boolean>(false)
-const isTyping = ref<boolean>(false)
-const isMatch = ref<boolean>(false)
+
 
 const totalPrice = computed<number>(() => {
     if (selectedItem.value) {
@@ -223,35 +225,37 @@ const totalPrice = computed<number>(() => {
     } else { return 0 }
 })
 
+const search = ref('')
+const selectedItem = ref(null)
+const isOpen = ref(false)
+
+const triggerDropdown = () => {
+    selectedItem.value = null
+    search.value = ''
+    isOpen.value = !isOpen.value
+}
+const onBlur = () => {
+    selectedItem.value = null
+    search.value = ''
+    isOpen.value = false
+}
+
 const filteredProducts = computed(() => {
-    const s = search.value.toLowerCase()
-    if (!s.trim()) {
-        return products
-    }
-
-    if (isOpen.value) {
-        return products
-    }
-
-    return products.filter((val) => {
-        return val.name.includes(s)
-    })
+    if (!search.value.trim() || isOpen.value) return products
+    return products.filter(p =>
+        p.name.toLowerCase().includes(search.value.toLowerCase())
+    )
 })
 
-const isListVisible = computed(() => {
-    if (isOpen.value) return true
-    if (!search.value.trim()) return selectedItem.value = null
+const showDropdown = computed(() => {
     if (selectedItem.value) return false
-    return isMatch.value && isTyping.value
+    return isOpen.value || search.value.length > 0
 })
-
 
 const selectItems = (item: any) => {
     selectedItem.value = item
     search.value = item.name
     isOpen.value = false
-    isTyping.value = false
-    isMatch.value = false
 }
 
 const addToCheckoutItems = () => {
@@ -281,10 +285,6 @@ const formatNumber = (n: string) => {
 }
 const joinCurrency = (nominal: string) => {
     return nominal.split('.').join('')
-}
-
-const triggerDropdownProduct = () => {
-    isOpen.value = !isOpen.value
 }
 
 const totalAmount = computed(() => {
@@ -325,16 +325,18 @@ const getData = (data: string) => {
 }
 provide('isActive', isActive)
 
+watch(search, (val) => {
+    const text = val.toLowerCase()
+    if (selectedItem.value && selectedItem.value.name.toLowerCase() !== text) {
+        selectedItem.value = null
+    }
+})
+
 watch(quantity, (val) => {
 
     if (!val || val < 1) {
         quantity.value = 1
     }
-})
-
-watch(search, (val) => {
-    isMatch.value = products.some((res) => res.name.toLocaleLowerCase().includes(val))
-    isTyping.value = val ? true : false
 })
 
 watch(paidAmount, (val) => {
