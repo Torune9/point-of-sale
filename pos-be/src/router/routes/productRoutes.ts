@@ -10,14 +10,14 @@ import { adminAuth } from "../../middleware/adminAuthorization.js"
 
 export const productRouter = e.Router()
 
-productRouter.get('/', getProducts)
+productRouter.get('/:businessId', getProducts)
 
 productRouter.post('/', validateData(Product), adminAuth, createProduct)
 
-productRouter.get('/:id', getProductById)
+productRouter.get('/:businessId/:id', getProductById)
 
-productRouter.patch('/:id', validateData(ProductUpdate), updateProduct)
+productRouter.patch('/:businessId/:id', validateData(ProductUpdate), updateProduct)
 
-productRouter.delete('/:id', adminAuth, deleteProduct)
+productRouter.delete('/:businessId/:id', adminAuth, deleteProduct)
 
-productRouter.post('/qrcode/:id', adminAuth, barcodeGenerate)
+productRouter.post('/qrcode/:businessId/:id', adminAuth, barcodeGenerate)
