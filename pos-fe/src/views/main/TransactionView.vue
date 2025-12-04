@@ -10,8 +10,8 @@
                     <label for="search">search</label>
 
                     <div class="flex flex-row border border-black/20 rounded-md hover:outline">
-                        <input  placeholder="search product..." type="text" id="search" v-model="search" list="product-list"
-                            class="p-2 w-full focus:outline-0" autocomplete="off" @blur="onBlur" />
+                        <input placeholder="search product..." type="text" id="search" v-model="search"
+                            list="product-list" class="p-2 w-full focus:outline-0" autocomplete="off"/>
                         <button class="border-l-0 px-2 cursor-pointer group" @click="triggerDropdown">
                             <Icon icon="heroicons:chevron-down-16-solid" class="transition-all duration-300" :class="{
                                 'rotate-x-180': isOpen || showDropdown
@@ -124,7 +124,7 @@ import { useConvert } from '@/composables/useConvert';
 import { useTransactionStore } from '@/stores/transactionStore';
 import { CheckoutItems } from '@/types/checkoutItem';
 import { storeToRefs } from 'pinia';
-import { computed, provide, reactive, ref, watch, watchEffect } from 'vue';
+import { computed, nextTick, provide, reactive, ref, watch, watchEffect } from 'vue';
 import { Header, Item } from 'vue3-easy-data-table';
 
 const convert = useConvert()
@@ -234,11 +234,6 @@ const triggerDropdown = () => {
     search.value = ''
     isOpen.value = !isOpen.value
 }
-const onBlur = () => {
-    selectedItem.value = null
-    search.value = ''
-    isOpen.value = false
-}
 
 const filteredProducts = computed(() => {
     if (!search.value.trim() || isOpen.value) return products
@@ -258,20 +253,22 @@ const selectItems = (item: any) => {
     isOpen.value = false
 }
 
+
 const addToCheckoutItems = () => {
 
     if (selectedItem.value) {
+        const payload = {
+            id: selectedItem.value.id,
+            name: selectedItem.value.name,
+            price: selectedItem.value.price,
+            quantity: quantity.value,
+            totalPrice: totalPrice.value,
+        }
         const isExist = items.value.some((val) => val.id == selectedItem.value.id)
         if (isExist) {
             updateItem(selectedItem.value, quantity.value, totalPrice.value)
         } else {
-            pushToItem({
-                id: selectedItem.value.id,
-                name: selectedItem.value.name,
-                price: selectedItem.value.price,
-                quantity: quantity.value,
-                totalPrice: quantity.value * totalPrice.value,
-            })
+            pushToItem(payload)
         }
     }
 
@@ -325,9 +322,10 @@ const getData = (data: string) => {
 }
 provide('isActive', isActive)
 
-watch(search, (val) => {
+watch(search, async (val) => {
     const text = val.toLowerCase()
-    if (selectedItem.value && selectedItem.value.name.toLowerCase() !== text) {
+    if (selectedItem.value && selectedItem.value.name.toLowerCase() !== text) {   
+        await nextTick()
         selectedItem.value = null
     }
 })
