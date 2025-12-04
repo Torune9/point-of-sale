@@ -29,7 +29,7 @@ export const updateProduct = async (req: Request, res: Response, next: NextFunct
         const qrData = JSON.stringify({
             id: existingProduct.id,
             sku: existingProduct.sku,
-            name: existingProduct.name,
+            name: name ?? existingProduct.name,
             price: existingProduct.price
         })
         const qrUrl = await QrCode.toDataURL(qrData)
@@ -51,8 +51,6 @@ export const updateProduct = async (req: Request, res: Response, next: NextFunct
                         : existingProduct.price,
             },
         });
-
-
 
         return res.json({
             message: "Product has been updated",
