@@ -7,12 +7,12 @@ import { adminAuth } from "../../middleware/adminAuthorization.js";
 
 export const categoryRouter = e.Router()
 
-categoryRouter.get('/', getCategory)
+categoryRouter.get('/:businessId', getCategory)
 
-categoryRouter.post('/', adminAuth, createCategory)
+categoryRouter.get('/:businessId/:id', getCategoryById)
 
-categoryRouter.get('/:id', getCategoryById)
+categoryRouter.post('/:businessId', adminAuth, createCategory)
 
-categoryRouter.patch('/:id', adminAuth, updateCategory)
+categoryRouter.patch('/:businessId/:id', adminAuth, updateCategory)
 
-categoryRouter.delete('/:id', adminAuth, deleteCategory)
+categoryRouter.delete('/:businessId/:id', adminAuth, deleteCategory)
