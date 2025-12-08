@@ -6,13 +6,15 @@ import { isPrismaError } from "../../../utils/isPrismaError.js";
 
 export const barcodeGenerate = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { id } = req.params
-        const { code } = req.body
+        const { businessId, productId } = req.params
+
         const product = await prisma.product.findFirst({
             where: {
-                id: id as string
+                id: productId as string,
+                businessId: businessId as string
             }
         })
+        
         if (!product) {
             return res.status(404).json({
                 message: 'prduct not found',
@@ -24,7 +26,6 @@ export const barcodeGenerate = async (req: Request, res: Response, next: NextFun
             name: product.name,
             sku: product.sku,
             price: product.price,
-            code
         });
 
         if (product.barcode) {
@@ -36,7 +37,8 @@ export const barcodeGenerate = async (req: Request, res: Response, next: NextFun
 
         await prisma.product.update({
             where: {
-                id: id as string
+                id: productId as string,
+                businessId: businessId as string
             },
             data: {
                 barcode: result
