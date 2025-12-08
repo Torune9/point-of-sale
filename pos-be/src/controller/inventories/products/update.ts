@@ -6,12 +6,12 @@ import QrCode from 'qrcode'
 
 export const updateProduct = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { id } = req.params;
-        const { name, price, stock, businessId } = req.body;
+        const { productId, businessId } = req.params;
+        const { name, price, stock } = req.body;
 
         const existingProduct = await prisma.product.findFirst({
             where: {
-                id: id as string,
+                id: productId as string,
                 businessId: businessId as string,
             },
         });
@@ -37,9 +37,9 @@ export const updateProduct = async (req: Request, res: Response, next: NextFunct
         const resultQrCode = await cloudinaryImageUpload(qrUrl, existingProduct.id)
 
         const updatedProduct = await prisma.product.update({
-            where: { id: id as string },
+            where: { id: productId as string, businessId: businessId as string, },
             data: {
-                barcode : resultQrCode,
+                barcode: resultQrCode,
                 name: name ?? existingProduct.name,
                 stock:
                     stock !== undefined
