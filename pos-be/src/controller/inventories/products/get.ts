@@ -4,12 +4,15 @@ import prisma from "../../../utils/prisma.js";
 export const getProducts = async (req: Request, res: Response) => {
     try {
         const { categoryId } = req.query
-        const { bussinesId } = req.body
+        const { businessId } = req.params
 
         const products = await prisma.product.findMany({
             where: {
-                businessId: bussinesId as string,
-                categoryId: categoryId as string,
+                businessId: businessId as string,
+                categoryId: categoryId as string || {},
+            },
+            include: {
+                category: true
             },
             orderBy: {
                 updatedAt: 'desc'
@@ -32,31 +35,30 @@ export const getProducts = async (req: Request, res: Response) => {
 
 export const getProductById = async (req: Request, res: Response) => {
     try {
-        const { id } = req.params
-        const { businessId } = req.body
+        const { businessId,productId } = req.params
         const product = await prisma.product.findFirst({
             where: {
-                id : id as string,
-                businessId
+                id: productId as string,
+                businessId : businessId as string
             }
         })
 
         if (!product) {
             return res.status(404).json({
-                message : 'product not found',
-                code : res.statusCode
+                message: 'product not found',
+                code: res.statusCode
             })
         }
 
         return res.json({
-            message : 'product successfully get',
-            data : product
+            message: 'product successfully get',
+            data: product
         })
     } catch (error) {
         return res.status(500).json({
-            message : 'error on server when get product detail',
-            code : res.statusCode,
-            errors : error
+            message: 'error on server when get product detail',
+            code: res.statusCode,
+            errors: error
         })
     }
 }
