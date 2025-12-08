@@ -4,10 +4,11 @@ import { cloudinaryImageDestroy } from "../../../utils/cloudinary.js";
 
 export const deleteProduct = async (req: Request, res: Response) => {
     try {
-        const { businessId, id } = req.params
+        const { businessId, productId } = req.params
+    
         const used = await prisma.item.count({
             where: {
-                productId: id ?? {}
+                productId: productId as string
             }
         });
 
@@ -20,7 +21,7 @@ export const deleteProduct = async (req: Request, res: Response) => {
 
         const product = await prisma.product.delete({
             where: {
-                id: id as string,
+                id: productId as string,
                 businessId: businessId as string
             }
         })
