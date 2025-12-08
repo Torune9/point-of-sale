@@ -3,7 +3,19 @@ import prisma from "../../../utils/prisma.js"
 
 export const getCategory = async (req: Request, res: Response) => {
     try {
-        const categories = await prisma.category.findMany()
+        const { businessId } = req.params
+
+        if (!businessId) {
+            return res.status(404).json({
+                message: 'category not found,need your business id',
+                code: res.statusCode
+            })
+        }
+        const categories = await prisma.category.findMany({
+            where: {
+                businessId
+            }
+        })
 
         return res.json({
             message: 'category successfully retrieved',
