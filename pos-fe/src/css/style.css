@@ -50,4 +50,7 @@ main {
    font-family: "Inter", sans-serif;
    border-radius: 10px;
    overflow: hidden;
+   text-align: center;
+   --easy-table-body-row-font-size : 14px;
+   --easy-table-header-font-size : 14px;
 }
