@@ -9,11 +9,11 @@
         </div>
         <div
             class="row-span-2 grid grid-cols-2 sm:grid-cols-3 gap-2 sm:row-start-4 sm:col-span-4 lg:col-start-3 lg:row-start-1 lg:row-span-1 lg:col-span-2">
-            <div class="bg-primary text-white h-full p-2 rounded-xl" v-for="n in 3">
-                <p>
+            <div class="bg-primary text-white h-full p-2 rounded-xl flex flex-col gap-2 relative overflow-hidden max-sm:h-24" v-for="n in storeBusiness.dataCash">
+                <p class="capitalize sm:text-xl text-lg">
                     {{ Object.keys(n)[0]}}
                 </p>
-               <p class="break-words text-xl md:text-lg">
+               <p class="break-words text-xl lg:text-lg sm:text-2xl sm:mt-4">
                 {{ convert.covertToRupiah(Object.values(n)[0] as number) }}
                </p>
             </div>
