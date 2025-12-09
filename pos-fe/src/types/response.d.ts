@@ -5,3 +5,9 @@ export interface ResponseLogin {
     code: number,
     data: object[]
 }
+
+export interface ResponseData {
+    message : string,
+    code : number,
+    data : any,
+}
