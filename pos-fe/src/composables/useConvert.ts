@@ -5,9 +5,13 @@ export function useConvert() {
             currency: "IDR",
         }).format(num)
     }
+    const convertToLocalDate = (date : string)=>{
+        return new Date(date).toLocaleDateString()
+    }
 
     return {
-        covertToRupiah
+        covertToRupiah,
+        convertToLocalDate
     }
 
 }
