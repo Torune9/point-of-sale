@@ -1,3 +1,4 @@
+import { userStore } from "@/stores/userStore";
 import axios from "axios";
 
 export const api = axios.create({
@@ -5,7 +6,10 @@ export const api = axios.create({
 });
 
 api.interceptors.request.use(
-    function (config) {;
+    function (config) {
+        const storeUser = userStore()        
+        config.headers.Authorization = `Bearer ${storeUser.token}`
+
         return config;
     },
     function (err) {
