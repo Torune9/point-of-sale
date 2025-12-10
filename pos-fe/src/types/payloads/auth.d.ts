@@ -1,9 +1,14 @@
 export interface DataLogin {
-    email : string,
-    password : string
+    email: string,
+    password: string
 }
 
 
 export interface DataRegister extends DataLogin {
-    username : string
+    username: string
+}
+
+export type WorkerPayload = DataRegister & {
+    businessId: string,
+    roleId: string
 }

@@ -1,16 +1,5 @@
-export interface Category {
-    name: string,
-    id: string,
-    businessId: string,
-}
-
-export interface Product {
-    name: string,
-    category: Category,
-    price: string,
-    stock: number,
-    barcode?: string
-}
+import { Category } from "../category"
+import { Product } from "../product"
 
 export interface ProductUpload {
     name: string,
@@ -19,7 +8,6 @@ export interface ProductUpload {
     stock: number,
     businessId: string
 }
-
 
 export type UpdateProduct = {
     name: string,
