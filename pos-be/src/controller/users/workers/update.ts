@@ -3,7 +3,7 @@ import prisma from "../../../utils/prisma.js";
 
 export const updateWorkers = async (req: Request, res: Response) => {
     try {
-        const { id } = req.params
+        const { businessId, id } = req.params
         const { username, email, roleId } = req.body
 
         if (!username || !email) {
@@ -15,7 +15,8 @@ export const updateWorkers = async (req: Request, res: Response) => {
 
         const workers = await prisma.worker.update({
             where: {
-                id: id as string
+                id: id as string,
+                businessId : businessId as string
             },
             data: {
                 username,
