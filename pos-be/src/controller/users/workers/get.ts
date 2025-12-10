@@ -8,12 +8,12 @@ export const getWorkers = async (req: Request, res: Response) => {
             where: {
                 businessId: businessId as string
             },
-            include: {
-                role: {
-                    omit: {
-                        id: true,
-                    }
-                },
+            select: {
+                id: true,
+                role: true,
+                username: true,
+                email: true,
+                businessId: true
             },
             orderBy: {
                 updatedAt: 'desc'
@@ -28,7 +28,7 @@ export const getWorkers = async (req: Request, res: Response) => {
     } catch (error) {
         return res.status(500).json({
             message: 'error when get workers on server',
-            code : res.statusCode,
+            code: res.statusCode,
             errors: error
         })
     }
