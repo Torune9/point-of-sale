@@ -14,6 +14,6 @@ workerRouter.post('/',validateData(Worker),createWorkers)
 
 workerRouter.get('/:businessId',getWorkers)
 
-workerRouter.patch('/:id',updateWorkers)
+workerRouter.patch('/:businessId/:id',updateWorkers)
 
-workerRouter.delete('/:id',deleteWorkers)
+workerRouter.delete('/:businessId/:id',deleteWorkers)
