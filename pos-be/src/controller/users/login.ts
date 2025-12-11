@@ -13,6 +13,7 @@ const ownerLogin = async (req: Request, res: Response) => {
                 email
             },
             include: {
+                role: true,
                 business: {
                     select: {
                         id: true,
@@ -72,6 +73,7 @@ const workerLogin = async (req: Request, res: Response) => {
         const worker = await prisma.worker.findUnique({
             where: { email },
             include: {
+                role: true,
                 business: {
                     select: {
                         id: true,
