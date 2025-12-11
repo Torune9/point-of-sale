@@ -92,16 +92,15 @@ const submit = async () => {
     }
 
     isLoading.value = !isLoading.value
-    try {
-        await storeUser.userRegister(formModel)
-        router.push({
-            name: 'dashboard'
-        })
-    } catch (error) {
-        console.log(error);
+    const response = await storeUser.userRegister(formModel)
+    isLoading.value = !isLoading.value
 
-    } finally {
-        isLoading.value = !isLoading.value
+    if (!response.success) {
+        return
     }
+    
+    router.push({
+        name: 'dashboard'
+    })
 }
 </script>
