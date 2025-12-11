@@ -1,3 +1,4 @@
+import { handleError } from "@/helper/errors";
 import { notify } from "@/helper/toastifyHelper";
 import { api } from "@/services/apiService";
 import { DataLogin } from "@/types/payloads/auth";
@@ -23,15 +24,19 @@ export const userStore = defineStore('user', {
 
                 notify.success(dataResponse.message)
 
+                return { success: true }
+
             } catch (error) {
-                notify.error(error.response.data.message)
-                throw error
+                handleError(error)
+                return { success: false }
             }
         },
-        async login(payload: DataLogin,isWorker:boolean) {
+        async login(payload: DataLogin, isWorker: boolean) {
             try {
                 const path = isWorker ? '/auth/login/worker' : '/auth/login'
                 const response = await api.post(path, payload)
+                console.log(response.data);
+                
 
                 const result: ResponseLogin = response.data as ResponseLogin
 
@@ -41,11 +46,11 @@ export const userStore = defineStore('user', {
 
                 notify.success(result.message)
 
-                return result
+                return { success: true }
 
             } catch (error) {
-                notify.error(error.response.data.message)
-                throw error
+                handleError(error)
+                return { success: false, error }
             }
         },
     }

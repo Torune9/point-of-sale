@@ -7,3 +7,6 @@
 /pos-fe/.env
 
 /pos-be/logs
+
+/pos-fe/src/dummy
+.vscode

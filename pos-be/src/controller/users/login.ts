@@ -53,6 +53,7 @@ const ownerLogin = async (req: Request, res: Response) => {
             data: publicDataUser,
             token,
             business: users.business,
+            role: users.role,
             code: res.statusCode
         })
 
@@ -115,6 +116,7 @@ const workerLogin = async (req: Request, res: Response) => {
             message: "Login success",
             token,
             data: publicDataUser,
+            role: worker.role,
             business: worker.business,
         })
     } catch (error) {
