@@ -89,7 +89,7 @@ const getWorkers = async () => {
     isLoading.value = true
     try {
         const response = await storeWorker.getWorkers(storeUser.userBusiness.id)
-        items.value = response.data
+        items.value = response.result.data
     } finally {
         isLoading.value = false
     }
@@ -97,7 +97,7 @@ const getWorkers = async () => {
 const getRoles = async () => {
     try {
         const response = await storeRoles.getRoles()
-        roles.value = response.data
+        roles.value = response.result.data
     } catch (error) {
 
     }
@@ -135,7 +135,7 @@ const confirm = async () => {
         await getWorkers()
     ])
 }
-const done = async ()=> await getWorkers()
+const done = async () => await getWorkers()
 
 const closeModal = (data: boolean) => {
     isShowConfirm.value = data
