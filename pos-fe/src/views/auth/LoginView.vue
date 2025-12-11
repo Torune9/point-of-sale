@@ -43,7 +43,7 @@
         <Transition name="fade">
             <Overlay v-if="isLoading">
                 <div class="w-full h-full flex justify-center items-center backdrop-blur-xs">
-                    <Spinner fill-colors="yellow"/>
+                    <Spinner fill-colors="yellow" />
                 </div>
             </Overlay>
         </Transition>
@@ -90,28 +90,19 @@ const storeUser = userStore()
 
 const submit = async () => {
     v$.value.$touch()
-    if (v$.value.$invalid) {
+    if (v$.value.$invalid) return
+
+    isLoading.value = true
+
+    const res = await storeUser.login(formModel, isWorker.value)
+
+    isLoading.value = false
+
+    if (!res.success) {
         return
     }
-    isLoading.value = !isLoading.value
-    try {
 
-        const result = await storeUser.login(formModel,isWorker.value)
-        console.log(result);
-        
-        
-        router.push({
-            name: 'dashboard'
-        })
-    } catch (error: any) {
-        console.log(error);
-    } finally {
-        isLoading.value = !isLoading.value
-    }
+    router.push({ name: 'dashboard' })
 }
 
-onMounted(() => {
-    console.log(storeUser.token);
-
-})
 </script>
