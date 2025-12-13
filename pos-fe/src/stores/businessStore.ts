@@ -1,4 +1,4 @@
-import { notify } from "@/helper/toastifyHelper";
+import { handleError } from "@/helper/errors";
 import { api } from "@/services/apiService";
 import { defineStore } from "pinia";
 
@@ -10,8 +10,8 @@ export const businessStore = defineStore('business', {
     actions: {
         async getTotalBusinessCash(businessId: string) {
             try {
-                const response = await api.get(`/cash/${businessId}`)
-                
+                const response = await api.get(`/cash/total/${businessId}`)
+
                 const { totalIn, totalOut, balance } = response.data;
 
                 this.dataCash = [
@@ -19,12 +19,12 @@ export const businessStore = defineStore('business', {
                     { "cash out": totalOut },
                     { "cash balance": balance }
                 ];
+                return { ok: true }
 
             } catch (error) {
-                console.log(error);
-                notify.error(error.response.data.message)
-
+                handleError(error)
+                return { ok: false }
             }
-        }
-    },
+        },
+    }
 }) 
