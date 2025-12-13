@@ -8,4 +8,4 @@ export const cashRouter = e.Router()
 
 cashRouter.post('/',validateData(cashData),cashFlow)
 cashRouter.get('/:businessId',getCashFlow)
-cashRouter.get('/:businessId/:id',totalCash)
+cashRouter.get('/total/:businessId',totalCash)
