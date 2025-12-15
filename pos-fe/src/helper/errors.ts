@@ -5,10 +5,10 @@ const errors = useError()
 export const handleError = (error: any) => {
     if (error instanceof AxiosError) {
 
-        if (error.response) {
-            errors.serverError(error)
-        } else {
+        if (error.code) {
             errors.networkErr(error)
+        } else {
+            errors.serverError(error)
         }
     }
 }
