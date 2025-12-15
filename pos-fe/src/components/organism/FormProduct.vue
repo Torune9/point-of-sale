@@ -71,7 +71,8 @@ import { computed, inject, onMounted, reactive, ref, watch, watchEffect } from '
 import BaseButton from '../atom/BaseButton.vue';
 import TextInput from '../atom/TextInput.vue';
 import Title from '../atom/Title.vue';
-import { Category, UpdateItems } from '@/types/payloads/product';
+import { UpdateItems } from '@/types/payloads/product';
+import { Category } from '@/types/category';
 import { productStore } from '@/stores/productStore';
 import { userStore } from '@/stores/userStore';
 import Spinner from '../atom/Spinner.vue';

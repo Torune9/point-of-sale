@@ -9,7 +9,8 @@ export const userStore = defineStore('user', {
     state: () => ({
         token: null,
         userData: null,
-        userBusiness: null
+        userBusiness: null,
+        role : null
     }),
     persist: true,
     actions: {
@@ -35,14 +36,13 @@ export const userStore = defineStore('user', {
             try {
                 const path = isWorker ? '/auth/login/worker' : '/auth/login'
                 const response = await api.post(path, payload)
-                console.log(response.data);
-                
-
+              
                 const result: ResponseLogin = response.data as ResponseLogin
 
                 this.token = result.token
                 this.userData = result.data
                 this.userBusiness = result.business
+                this.role = result.role
 
                 notify.success(result.message)
 
