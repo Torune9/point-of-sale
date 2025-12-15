@@ -34,6 +34,9 @@ export const getCashFlow = async (req: Request, res: Response) => {
         const cash = await prisma.cashflow.findMany({
             where: {
                 businessId: businessId as string
+            },
+            orderBy : {
+                createdAt : 'desc'
             }
         })
 
