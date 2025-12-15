@@ -11,7 +11,7 @@
 
                     <div class="flex flex-row border border-black/20 rounded-md hover:outline">
                         <input placeholder="search product..." type="text" id="search" v-model="search"
-                            list="product-list" class="p-2 w-full focus:outline-0" autocomplete="off"/>
+                            list="product-list" class="p-2 w-full focus:outline-0" autocomplete="off" />
                         <button class="border-l-0 px-2 cursor-pointer group" @click="triggerDropdown">
                             <Icon icon="heroicons:chevron-down-16-solid" class="transition-all duration-300" :class="{
                                 'rotate-x-180': isOpen || showDropdown
@@ -37,7 +37,7 @@
             </div>
             <div class="inline-flex gap-x-2">
                 <TextInput label="quantity" v-model="quantity" type="number" />
-                <TextInput label="price" v-model="totalPrice" :disabled="true" />
+                <InputCurrency label="price" v-model="display.price" :disabled="true" />
             </div>
             <div class="self-end inline-flex gap-x-2 justify-between col-span-3">
                 <BaseButton type="button" @click="addToCheckoutItems">
@@ -101,9 +101,11 @@
         <div class=" row-span-3 col-span-2 bg-gray-100 p-4 rounded-2xl flex flex-col gap-y-2">
             <Title tag="h3" class="text-center">Information</Title>
             <form action="#" class="h-full flex flex-col gap-y-2">
-                <TextInput :disabled="true" label="total amout" v-model="totalAmount" placeholder="0" />
-                <TextInput label="paid amount" v-model="paidAmount" placeholder="0" />
-                <TextInput :disabled="true" label="change amount" v-model="changeAmount" placeholder="0" />
+                <InputCurrency :disabled="true" label="total amout" v-model="display.totalAmount"
+                    @on-input-update="onTotalAmountTyping" placeholder="0" />
+                <InputCurrency label="paid amount" v-model="display.paidAmount" placeholder="0"
+                    @on-input-update="onPaidAmountTyping" />
+                <InputCurrency :disabled="true" label="change amount" v-model="display.changeAmount" placeholder="0" />
                 <BaseButton>
                     <template #title-btn>
                         Checkout
@@ -116,15 +118,14 @@
 
 <script setup lang="ts">
 import BaseButton from '@/components/atom/BaseButton.vue';
-import Spinner from '@/components/atom/Spinner.vue';
+import InputCurrency from '@/components/atom/InputCurrency.vue';
 import TextInput from '@/components/atom/TextInput.vue';
 import Title from '@/components/atom/Title.vue';
 import BarcodeScanner from '@/components/molecules/BarcodeScanner.vue';
 import { useConvert } from '@/composables/useConvert';
 import { useTransactionStore } from '@/stores/transactionStore';
-import { CheckoutItems } from '@/types/checkoutItem';
 import { storeToRefs } from 'pinia';
-import { computed, nextTick, provide, reactive, ref, watch, watchEffect } from 'vue';
+import { computed, nextTick, provide, reactive, ref, watch } from 'vue';
 import { Header, Item } from 'vue3-easy-data-table';
 
 const convert = useConvert()
@@ -161,7 +162,6 @@ const headers = ref<Header[]>([
         value: 'action'
     }
 ])
-
 const products = [
     {
         id: 1,
@@ -216,7 +216,9 @@ const products = [
 ]
 
 const quantity = ref<number>(1)
-const paidAmount = ref<string>('')
+const search = ref('')
+const selectedItem = ref(null)
+const isOpen = ref(false)
 
 
 const totalPrice = computed<number>(() => {
@@ -225,9 +227,31 @@ const totalPrice = computed<number>(() => {
     } else { return 0 }
 })
 
-const search = ref('')
-const selectedItem = ref(null)
-const isOpen = ref(false)
+const display = reactive({
+    price: '0',
+    totalAmount: '0',
+    paidAmount: '0',
+    changeAmount: '0'
+})
+
+const payload = reactive({
+    price: 0,
+    totalAmount: 0,
+    paidAmount: 0,
+    changeAmount: 0
+})
+
+const onTotalAmountTyping = (data: string) => {
+    payload.totalAmount = Number(data)
+}
+const onPaidAmountTyping = (data: number) => {
+    if (!data) {
+        display.changeAmount = '0'
+        return
+    }
+    let result = Number(data) - payload.totalAmount
+    display.changeAmount = result.toString()
+}
 
 const triggerDropdown = () => {
     selectedItem.value = null
@@ -277,26 +301,6 @@ const addToCheckoutItems = () => {
     quantity.value = 1
 }
 
-const formatNumber = (n: string) => {
-    return n.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-}
-const joinCurrency = (nominal: string) => {
-    return nominal.split('.').join('')
-}
-
-const totalAmount = computed(() => {
-    const result = items.value.reduce((acc, curr) => {
-        return acc + curr.totalPrice
-    }, 0)
-    return formatNumber(result.toString())
-})
-const changeAmount = computed(() => {
-    let paid = Number(joinCurrency(paidAmount.value))
-
-    const total = Number(joinCurrency(totalAmount.value))
-    return formatNumber((Math.abs(total - paid)).toString())
-})
-
 const activeId = ref<number | null>(null)
 const editQuantity = (id: number) => {
     if (activeId.value == id) {
@@ -322,9 +326,13 @@ const getData = (data: string) => {
 }
 provide('isActive', isActive)
 
+watch(totalPrice, (val) => {
+    display.price = val.toString()
+})
+
 watch(search, async (val) => {
     const text = val.toLowerCase()
-    if (selectedItem.value && selectedItem.value.name.toLowerCase() !== text) {   
+    if (selectedItem.value && selectedItem.value.name.toLowerCase() !== text) {
         await nextTick()
         selectedItem.value = null
     }
@@ -336,9 +344,14 @@ watch(quantity, (val) => {
         quantity.value = 1
     }
 })
-
-watch(paidAmount, (val) => {
-    paidAmount.value = formatNumber(val)
+watch(items, (val) => {
+    const result: number = val.reduce((acc, curr) => {
+        return acc + curr.totalPrice
+    }, 0)
+    display.totalAmount = result.toString()
+    payload.totalAmount = result
+}, {
+    deep: true,
+    immediate: true
 })
-
 </script>
