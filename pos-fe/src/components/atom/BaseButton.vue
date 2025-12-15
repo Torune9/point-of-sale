@@ -1,5 +1,5 @@
 <template>
-    <button :type="type" class="p-2 rounded-full cursor-pointer font-semibold text-white transition-all duration-300"
+    <button :disabled="isDisable"  :type="type" class="p-2 rounded-full cursor-pointer font-semibold text-white transition-all duration-300"
         :class="[sizeClass, typeClass]">
         <slot name="title-btn" />
     </button>
@@ -12,7 +12,8 @@ import { computed } from 'vue';
 const props = withDefaults(defineProps<{
     size?: 'sm' | 'md' | 'lg' | 'full' | 'auto',
     typeBtn?: 'danger' | 'info' | 'success' | 'cta',
-    type?: 'submit' | 'button'
+    type?: 'submit' | 'button',
+    isDisable : boolean
 }>()
     ,{
         type: 'button'
