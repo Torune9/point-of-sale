@@ -6,10 +6,12 @@
                     Input Cash
                 </Title>
                 <form @submit.prevent="recap" class="flex flex-col gap-y-4">
-                    <InputCurrency label="nominal" v-model="displayAmount" @on-input-update="inputTyping"
+                    <InputCurrency auto-complete="off" label="nominal" v-model="displayAmount"
+                        @on-input-update="inputTyping"
                         :error-message="v$.displayAmount.$error ? v$.displayAmount.$errors : null" />
                     <div>
                         <label for="type">Type</label>
+                        {{ payload.type }}
                         <select name="type" id="type" v-model="payload.type"
                             class="border border-black/20 p-3 rounded-lg w-full">
                             <option value="" disabled>
@@ -23,13 +25,14 @@
                             {{ error.$message }}
                         </small>
                     </div>
-                    <TextInput label="note" v-model="payload.note" />
+                    <TextInput label="note" v-model="payload.note"
+                        :error-message="v$.note.$error ? v$.note.$errors : null" />
                     <div class="text-end">
                         <BaseButton type="submit" :is-disable="isLoading">
                             <template #title-btn>
                                 <span v-if="!isLoading">Create</span>
                                 <div v-else class="flex justify-center items-center">
-                                    <Spinner size="xs"/>
+                                    <Spinner size="xs" />
                                 </div>
                             </template>
                         </BaseButton>
@@ -39,14 +42,14 @@
             <div class="max-lg:col-span-2 space-y-2">
                 <div class="flex flex-row gap-x-8">
                     <div class="flex flex-row gap-x-2 items-center">
-                        <button type="button" v-for="(filter, idx) in types" :key="idx"
-                            :aria-selected="activeIdx === idx" @click="selectedFilter(idx)"
+                        <button type="button" v-for="(type, idx) in types" :key="idx" :aria-selected="activeIdx === idx"
+                            @click="selectedFilter(idx, type)"
                             class="bg-accent text-white hover:bg-secondary cursor-pointer rounded-md transition-all duration-300 w-14 h-max p-1"
                             :class="{
                                 'hidden': activeIdx !== null && activeIdx !== idx,
                                 'bg-primary': activeIdx == idx,
                             }">
-                            {{ filter }}
+                            {{ type }}
                         </button>
                     </div>
                 </div>
@@ -61,6 +64,9 @@
                             'bg-green-600': type == 'IN'
                         }">{{ type }}</span>
                     </template>
+                    <template #item-createdAt="{createdAt}">
+                        {{ convert.convertToLocalDate(createdAt) }}
+                    </template>
                 </EasyTable>
             </div>
         </div>
@@ -73,7 +79,6 @@ import BaseButton from '@/components/atom/BaseButton.vue';
 import { computed, onMounted, reactive, ref, watch } from 'vue';
 import { Header, Item } from 'vue3-easy-data-table';
 
-import { data } from '@/dummy/cashFlow';
 import { useConvert } from '@/composables/useConvert';
 import TextInput from '@/components/atom/TextInput.vue';
 import { required } from '@vuelidate/validators';
@@ -112,34 +117,47 @@ const header = ref<Header[]>([
 
 const item = ref<Item[]>([])
 const types = ref(['IN', 'OUT'])
+const typeActive = ref<string>('')
 
 const payload = reactive({
     amount: 0,
     type: '',
-    note: ''
+    note: '',
+    businessId: storeUser.userBusiness.id
 })
 
 const displayAmount = ref('')
 
 const rules = computed(() => ({
     displayAmount: { required },
-    type: { required }
+    type: { required },
+    note: { required }
 }))
 
-const v$ = useVuelidate(rules, { displayAmount, type: payload.type })
+const v$ = useVuelidate(rules, {
+    displayAmount,
+    note: computed(() => payload.note),
+    type: computed(() => payload.type)
+})
 
-const selectedFilter = (idx: number) => {
+const getCashFlow = async (type?: string) => {
+    try {
+        const response = await storeFinance.getCashFlow(storeUser.userBusiness.id, type)
+        item.value = response.result.data
+
+    } catch (error) {
+        console.log(error);
+
+    }
+}
+const selectedFilter = async (idx: number, type: string) => {
     if (activeIdx.value === idx) {
         activeIdx.value = null
+        typeActive.value = ''
         return
     }
-
+    typeActive.value = type
     activeIdx.value = idx
-}
-
-const getCashFlow = async () => {
-    const response = await storeFinance.getCashFlow(storeUser.userBusiness.id)
-    item.value = response.result.data
 }
 
 const inputTyping = (data: string) => {
@@ -149,23 +167,34 @@ const inputTyping = (data: string) => {
 const isLoading = ref<boolean>(false)
 
 const recap = async () => {
-    isLoading.value = true
     v$.value.$touch()
     const isValid = await v$.value.$validate()
     if (!isValid) return
 
+    isLoading.value = true
     try {
-        const response = await storeFinance.createCashFlow(storeUser.userBusiness.id, payload)
-        console.log(response);
+        const response = await storeFinance.createCashFlow(payload)
+        Object.assign(payload, {
+            note: '',
+            amount: 0,
+            type: ''
+        })
+        v$.value.$reset()
 
     } catch (error) {
         console.log(error);
 
     } finally {
+        activeIdx.value = null
+        displayAmount.value = '0'
         isLoading.value = false
+        getCashFlow()
     }
 }
 
+watch(typeActive, async (val) => {
+    await getCashFlow(val)
+})
 onMounted(() => {
     getCashFlow()
 })
