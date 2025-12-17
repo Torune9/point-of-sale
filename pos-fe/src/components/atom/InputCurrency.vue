@@ -5,7 +5,7 @@
         </label>
         <input type="text" :name="label" :id="label"
             class="w-full border border-black/20 focus:outline-primary p-2 rounded-lg hover:outline-1 hover:outline-accent transition-all duration-500"
-            v-model="displayValue" :placeholder="placeholder" :disabled="disabled" :class="{
+            v-model="displayValue" :placeholder="placeholder" :disabled="disabled" :autocomplete="autoComplete" :class="{
                 'bg-gray-300': disabled
             }">
         <small class="text-red-700">
@@ -22,9 +22,11 @@ const props = withDefaults(defineProps<{
     label?: string,
     errorMessage?: Array<ErrorObject> | null,
     placeholder?: string,
-    disabled?: boolean
+    disabled?: boolean,
+    autoComplete?: string
 }>(), {
-    disabled: false
+    disabled: false,
+    autoComplete: 'on'
 })
 
 const model = defineModel<string>({ required: true })
