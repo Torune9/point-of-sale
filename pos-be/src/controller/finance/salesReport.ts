@@ -6,7 +6,7 @@ import { generateSalesReportPDF } from "../../helper/salesReportPdf.js";
 export const salesReport = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { businessId } = req.params;
-        const { date } = req.body;
+        const { startDate, endDate } = req.query;
 
         const sale = await prisma.sale.findFirstOrThrow({
             where: { businessId: businessId as string },
@@ -16,8 +16,8 @@ export const salesReport = async (req: Request, res: Response, next: NextFunctio
         });
 
         const now = new Date();
-        const start = new Date(date?.startDate || now);
-        const end = new Date(date?.endDate || now);
+        const start = new Date(startDate as string || now);
+        const end = new Date(endDate as string || now);
         start.setHours(0, 0, 0, 0);
         end.setHours(23, 59, 59, 999);
 
