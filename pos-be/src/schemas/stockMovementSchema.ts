@@ -21,10 +21,4 @@ export const CreateSaleSchema = z.object({
   paidAmount : z.number().positive(),
 });
 
-
-export type SaleItem = {
-  productId: string;
-  quantity: number;
-  price: number;
-  subtotal: number;
-};
+export type SaleItem = z.infer<typeof SaleItemSchema>;
