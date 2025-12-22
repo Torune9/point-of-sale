@@ -11,7 +11,7 @@ export const SaleItemSchema = z.object({
   productId: z.string(),
   quantity: z.number().int().min(1),
   price: z.number().positive(),
-  subtotal: z.number().positive(),
+  subTotal: z.number().positive(),
 });
 
 export const CreateSaleSchema = z.object({
