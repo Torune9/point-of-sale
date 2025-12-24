@@ -7,7 +7,7 @@ import { getStockMovements } from "../../controller/inventories/stock-movements/
 
 export const stockMomeventRouter = e.Router()
 
-stockMomeventRouter.get('/', getStockMovements)
+stockMomeventRouter.get('/:businessId', getStockMovements)
 
 stockMomeventRouter.post('/', validateData(ProductMovement), stockMovement)
 
