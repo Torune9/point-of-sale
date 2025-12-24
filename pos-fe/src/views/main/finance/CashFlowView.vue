@@ -6,9 +6,8 @@
                     Input Cash
                 </Title>
                 <form @submit.prevent="recap" class="flex flex-col gap-y-4">
-                    <InputCurrency auto-complete="off" label="nominal" v-model="displayAmount"
-                        @on-input-update="inputTyping"
-                        :error-message="v$.displayAmount.$error ? v$.displayAmount.$errors : null" />
+                    <InputCurrency auto-complete="off" label="nominal" v-model="payload.amount" placeholder="0"
+                        @on-input-update="inputTyping" :error-message="v$.amount.$error ? v$.amount.$errors : null" />
                     <div>
                         <label for="type">Type</label>
                         {{ payload.type }}
@@ -26,7 +25,7 @@
                         </small>
                     </div>
                     <TextInput label="note" v-model="payload.note"
-                        :error-message="v$.note.$error ? v$.note.$errors : null" />
+                        :error-message="v$.note.$error ? v$.note.$errors : null" placeholder="0" />
                     <div class="text-end">
                         <BaseButton type="submit" :is-disable="isLoading">
                             <template #title-btn>
@@ -54,7 +53,7 @@
                     </div>
                 </div>
                 <EasyTable table-class-name="customize-table" :headers="header" :items="item" :rows-per-page="10"
-                    :rows-items="[10, 15, 20]" border-cell alternating>
+                    :rows-items="[10, 15, 20]" border-cell alternating :loading="loading">
                     <template #item-amount="{ amount }">
                         {{ convert.covertToRupiah(amount) }}
                     </template>
@@ -64,7 +63,7 @@
                             'bg-green-600': type == 'IN'
                         }">{{ type }}</span>
                     </template>
-                    <template #item-createdAt="{createdAt}">
+                    <template #item-createdAt="{ createdAt }">
                         {{ convert.convertToLocalDate(createdAt) }}
                     </template>
                 </EasyTable>
@@ -76,7 +75,7 @@
 <script setup lang="ts">
 import BaseButton from '@/components/atom/BaseButton.vue';
 
-import { computed, onMounted, reactive, ref, watch } from 'vue';
+import { computed, onMounted, reactive, ref, toRef, watch } from 'vue';
 import { Header, Item } from 'vue3-easy-data-table';
 
 import { useConvert } from '@/composables/useConvert';
@@ -126,21 +125,21 @@ const payload = reactive({
     businessId: storeUser.userBusiness.id
 })
 
-const displayAmount = ref('')
-
 const rules = computed(() => ({
-    displayAmount: { required },
+    amount: { required },
     type: { required },
     note: { required }
 }))
 
 const v$ = useVuelidate(rules, {
-    displayAmount,
+    amount: computed(() => payload.amount),
     note: computed(() => payload.note),
     type: computed(() => payload.type)
 })
 
+const loading = ref<boolean>(false)
 const getCashFlow = async (type?: string) => {
+    loading.value = true
     try {
         const response = await storeFinance.getCashFlow(storeUser.userBusiness.id, type)
         item.value = response.result.data
@@ -148,6 +147,8 @@ const getCashFlow = async (type?: string) => {
     } catch (error) {
         console.log(error);
 
+    }finally{
+        loading.value = false
     }
 }
 const selectedFilter = async (idx: number, type: string) => {
@@ -173,7 +174,7 @@ const recap = async () => {
 
     isLoading.value = true
     try {
-        const response = await storeFinance.createCashFlow(payload)
+        await storeFinance.createCashFlow(payload)
         Object.assign(payload, {
             note: '',
             amount: 0,
@@ -186,7 +187,7 @@ const recap = async () => {
 
     } finally {
         activeIdx.value = null
-        displayAmount.value = '0'
+        payload.amount = 0
         isLoading.value = false
         getCashFlow()
     }
