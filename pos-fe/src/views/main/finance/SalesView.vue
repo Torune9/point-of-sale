@@ -16,7 +16,7 @@
                         class="flex flex-col gap-y-2 fixed right-2 bottom-2 z-30 bg-white p-2 outline outline-black/30 rounded-md shadow-md">
                         <div class="flex flex-row justify-between">
                             <Title tag="h3">Report Selling</Title>
-                            <button
+                            <button type="button"
                                 class="h-6 w-6 rounded-full bg-red-600 hover:bg-red-500 transition-colors cursor-pointer text-white">
                                 <Icon icon="heroicons:x-mark-16-solid" class="m-auto" @click.stop="showOrHideReport" />
                             </button>
