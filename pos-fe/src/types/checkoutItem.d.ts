@@ -1,7 +1,7 @@
 export interface CheckoutItems{
-    productId : number,
+    productId : string,
     name : string,
     price :string,
     quantity : number,
-    totalPrice : number
+    subTotal : number
 } 
