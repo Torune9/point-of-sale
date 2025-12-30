@@ -2,7 +2,6 @@
     <div class="flex flex-col gap-y-2">
         <div class="inline-flex gap-x-4 justify-between items-center w-full">
             <div>
-
                 <VueDatePicker v-model="date" range />
             </div>
             <div>
@@ -122,6 +121,7 @@ const getSales = async (query: any = {}) => {
     }
 }
 const report = async () => {
+    if (!queryDate.endDate || !queryDate.startDate) return
     isLoading.value = true
     try {
         await storeFinance.createReport(storeUser.userBusiness.id, queryDate)
