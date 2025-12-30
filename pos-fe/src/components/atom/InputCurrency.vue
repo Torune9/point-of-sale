@@ -29,21 +29,18 @@ const props = withDefaults(defineProps<{
     autoComplete: 'on'
 })
 
-const model = defineModel<string>({ required: true })
+const model = defineModel<number>({ required: true })
 const emits = defineEmits<{
     onInputUpdate: [string | number]
 }>()
 
 const displayValue = computed({
     get() {
-        if (!model.value) return ''
-        const onlyNumber = model.value.replace(/\D/g, '')
-        return Number(onlyNumber).toLocaleString('id-ID')
+        return model.value?.toLocaleString('id-ID') ?? ''
     },
     set(val: string) {
-        const onlyNumber = val.replace(/\D/g, '')
-        emits('onInputUpdate', onlyNumber)
-        model.value = onlyNumber
+        const raw = Number(val.replace(/\D/g, ''))
+        model.value = isNaN(raw) ? null : raw
     }
 })
 
