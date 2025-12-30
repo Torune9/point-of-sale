@@ -36,11 +36,20 @@
                 </div>
             </div>
             <div class="inline-flex gap-x-2">
-                <TextInput label="quantity" v-model="quantity" type="number" />
+                <div class="shrink-0">
+                    <TextInput :disabled="isStockOut" label="quantity" v-model="quantity" type="number"
+                        @on-input-update="quantityTyping" />
+                    <small v-if="selectedItem" class="font-semibold">
+                        Available stock :
+                        <span :class="{
+                            'text-red-600': selectedItem.stock == 0
+                        }">{{ selectedItem.stock }}</span>
+                    </small>
+                </div>
                 <InputCurrency label="price" v-model="display.price" :disabled="true" />
             </div>
             <div class="self-end inline-flex gap-x-2 justify-between col-span-3">
-                <BaseButton type="button" @click="addToCheckoutItems">
+                <BaseButton :is-disable="isStockOut" type="button" @click="addToCheckoutItems">
                     <template #title-btn>
                         submit
                     </template>
@@ -59,36 +68,36 @@
                 <template #item-price="{ price }">
                     <span>{{ convert.covertToRupiah(price) }}</span>
                 </template>
-                <template #item-quantity="{ id, quantity, index }">
+                <template #item-quantity="{ productId, quantity, index }">
                     <div class="inline-flex gap-x-4 relative">
                         <div class="inline-flex">
-                            <button v-if="activeId == id" @click="quantityDecrement(index)"
+                            <button v-if="activeId == productId" @click="quantityDecrement(index)"
                                 class="border bg-gray-200 border-gray-300 hover:bg-gray-300 transition-colors rounded-full cursor-pointer p-1 ">
                                 <icon icon="heroicons:minus-16-solid" />
                             </button>
                             <span class="mx-2">{{ quantity }}</span>
-                            <button v-if="activeId == id" @click="quantityIncrement(index)"
+                            <button v-if="activeId == productId" @click="quantityIncrement(index)"
                                 class="border bg-gray-200 border-gray-300 hover:bg-gray-300 transition-colors rounded-full cursor-pointer p-1  right-full">
                                 <icon icon="heroicons:plus-16-solid" />
                             </button>
                         </div>
-                        <button v-if="activeId == id" @click="() => activeId = null"
+                        <button v-if="activeId == productId" @click="() => activeId = null"
                             class="border bg-green-200 border-green-400 rounded-full cursor-pointer p-1 hover:bg-green-300 transition-colors">
                             <Icon icon="heroicons:check-16-solid" />
                         </button>
                     </div>
                 </template>
-                <template #item-totalPrice="{ totalPrice }">
-                    <span>{{ convert.covertToRupiah(totalPrice) }}</span>
+                <template #item-subTotal="{ subTotal }">
+                    <span>{{ convert.covertToRupiah(subTotal) }}</span>
                 </template>
-                <template #item-action="{ id }">
+                <template #item-action="{ productId }">
                     <div class="inline-flex gap-1 py-1">
-                        <BaseButton size="auto" type="button" type-btn="info" @click="editQuantity(id)">
+                        <BaseButton size="auto" type="button" type-btn="info" @click="editQuantity(productId)">
                             <template #title-btn>
                                 <Icon icon="heroicons:pencil-square-20-solid" />
                             </template>
                         </BaseButton>
-                        <BaseButton size="auto" type="button" type-btn="danger" @click="deleteItem(id)">
+                        <BaseButton size="auto" type="button" type-btn="danger" @click="deleteItem(productId)">
                             <template #title-btn>
                                 <Icon icon="heroicons:trash-16-solid" />
                             </template>
@@ -100,13 +109,12 @@
         <!-- Info transaction -->
         <div class=" row-span-3 col-span-2 bg-gray-100 p-4 rounded-2xl flex flex-col gap-y-2">
             <Title tag="h3" class="text-center">Information</Title>
-            <form action="#" class="h-full flex flex-col gap-y-2">
-                <InputCurrency :disabled="true" label="total amout" v-model="display.totalAmount"
-                    @on-input-update="onTotalAmountTyping" placeholder="0" />
+            <form @submit.prevent="checkout" class="h-full flex flex-col gap-y-2">
+                <InputCurrency :disabled="true" label="total amout" v-model="display.totalAmount" placeholder="0" />
                 <InputCurrency label="paid amount" v-model="display.paidAmount" placeholder="0"
-                    @on-input-update="onPaidAmountTyping" />
-                <InputCurrency :disabled="true" label="change amount" v-model="display.changeAmount" placeholder="0" />
-                <BaseButton>
+                    :error-message="v$.paidAmount.$error ? v$.paidAmount.$errors : null" />
+                <InputCurrency :disabled="true" label="change amount" v-model="changeAmount" placeholder="0" />
+                <BaseButton type="submit" :is-disable="isDisableCheckoutBtn">
                     <template #title-btn>
                         Checkout
                     </template>
@@ -123,12 +131,20 @@ import TextInput from '@/components/atom/TextInput.vue';
 import Title from '@/components/atom/Title.vue';
 import BarcodeScanner from '@/components/molecules/BarcodeScanner.vue';
 import { useConvert } from '@/composables/useConvert';
+import { productStore } from '@/stores/productStore';
 import { useTransactionStore } from '@/stores/transactionStore';
+import { userStore } from '@/stores/userStore';
+import { Checkout } from '@/types/checkout';
+import { Product } from '@/types/product';
+import useVuelidate from '@vuelidate/core';
+import { helpers, minValue, required } from '@vuelidate/validators';
 import { storeToRefs } from 'pinia';
-import { computed, nextTick, provide, reactive, ref, watch } from 'vue';
-import { Header, Item } from 'vue3-easy-data-table';
+import { computed, nextTick, onMounted, provide, reactive, ref, toRef, watch } from 'vue';
+import { Header } from 'vue3-easy-data-table';
 
 const convert = useConvert()
+
+const storeProduct = productStore()
 const transactionStore = useTransactionStore()
 const { items } = storeToRefs(transactionStore)
 const {
@@ -138,6 +154,7 @@ const {
     quantityIncrement,
     quantityDecrement
 } = transactionStore
+const storeUser = userStore()
 
 const headers = ref<Header[]>([
     {
@@ -154,104 +171,52 @@ const headers = ref<Header[]>([
 
     },
     {
-        text: 'total price',
-        value: 'totalPrice'
+        text: 'Subtotal',
+        value: 'subTotal'
     },
     {
         text: 'action',
         value: 'action'
     }
 ])
-const products = [
-    {
-        id: 1,
-        name: 'prod 1',
-        price: 1000,
-    },
-    {
-        id: 2,
-        name: 'prod 2',
-        price: 2000,
-    },
-    {
-        id: 3,
-        name: 'prod 3',
-        price: 3000,
-    },
-    {
-        id: 4,
-        name: 'prod 4',
-        price: 8060,
-    },
-    {
-        id: 5,
-        name: 'prod 5',
-        price: 3801,
-    },
-    {
-        id: 6,
-        name: 'prod 6',
-        price: 3202,
-    },
-    {
-        id: 7,
-        name: 'prod 7',
-        price: 2500,
-    },
-    {
-        id: 8,
-        name: 'prod 8',
-        price: 7000,
-    },
-    {
-        id: 9,
-        name: 'prod 9',
-        price: 15000,
-    },
-    {
-        id: 10,
-        name: 'prod 10',
-        price: 10000,
-    },
-]
-
+const products = ref<Product[]>()
 const quantity = ref<number>(1)
 const search = ref('')
-const selectedItem = ref(null)
+const selectedItem = ref<Product>()
 const isOpen = ref(false)
 
-
-const totalPrice = computed<number>(() => {
+const subTotal = computed<number>(() => {
     if (selectedItem.value) {
-        return selectedItem.value.price * quantity.value
+        return Number(selectedItem.value.price) * quantity.value
     } else { return 0 }
 })
 
 const display = reactive({
-    price: '0',
-    totalAmount: '0',
-    paidAmount: '0',
-    changeAmount: '0'
-})
-
-const payload = reactive({
     price: 0,
     totalAmount: 0,
     paidAmount: 0,
-    changeAmount: 0
 })
 
-const onTotalAmountTyping = (data: string) => {
-    payload.totalAmount = Number(data)
-}
-const onPaidAmountTyping = (data: number) => {
-    if (!data) {
-        display.changeAmount = '0'
-        return
+const changeAmount = computed(() => {
+    if (display.paidAmount == 0) {
+        return 0
     }
-    let result = Number(data) - payload.totalAmount
-    display.changeAmount = result.toString()
-}
+    return Math.abs(display.totalAmount - display.paidAmount)
+})
+
+const rules = computed(() => ({
+    paidAmount: {
+        required,
+        minValue: helpers.withMessage('value must be higher or equal to the total amount', minValue(toRef(display, 'totalAmount')))
+    }
+}))
+
+const isDisableCheckoutBtn = computed(() => {
+    return !display.paidAmount || selectedItem.value?.stock == 0
+})
+const isStockOut = computed(() => selectedItem.value?.stock == 0)
+const v$ = useVuelidate(rules, { paidAmount: toRef(display, 'paidAmount') })
+
 
 const triggerDropdown = () => {
     selectedItem.value = null
@@ -259,9 +224,9 @@ const triggerDropdown = () => {
     isOpen.value = !isOpen.value
 }
 
-const filteredProducts = computed(() => {
-    if (!search.value.trim() || isOpen.value) return products
-    return products.filter(p =>
+const filteredProducts = computed<Product[]>(() => {
+    if (!search.value.trim() || isOpen.value) return products.value
+    return products.value.filter(p =>
         p.name.toLowerCase().includes(search.value.toLowerCase())
     )
 })
@@ -271,26 +236,26 @@ const showDropdown = computed(() => {
     return isOpen.value || search.value.length > 0
 })
 
-const selectItems = (item: any) => {
+const selectItems = (item: Product) => {
     selectedItem.value = item
+    quantity.value = 1
     search.value = item.name
     isOpen.value = false
 }
-
 
 const addToCheckoutItems = () => {
 
     if (selectedItem.value) {
         const payload = {
-            id: selectedItem.value.id,
+            productId: selectedItem.value.id,
             name: selectedItem.value.name,
             price: selectedItem.value.price,
             quantity: quantity.value,
-            totalPrice: totalPrice.value,
+            subTotal: subTotal.value,
         }
-        const isExist = items.value.some((val) => val.id == selectedItem.value.id)
+        const isExist = items.value.some((val) => val.productId == selectedItem.value.id)
         if (isExist) {
-            updateItem(selectedItem.value, quantity.value, totalPrice.value)
+            updateItem(selectedItem.value.id, quantity.value, subTotal.value)
         } else {
             pushToItem(payload)
         }
@@ -317,17 +282,60 @@ const scanStart = () => {
 const getData = (data: string) => {
     const result = JSON.parse(data)
     pushToItem({
-        id: result.id,
+        productId: result.id,
         name: result.name,
         price: result.price,
         quantity: quantity.value,
-        totalPrice: quantity.value * Number(result.price)
+        subTotal: quantity.value * Number(result.price)
     })
 }
+// serve isActive for component
 provide('isActive', isActive)
 
-watch(totalPrice, (val) => {
-    display.price = val.toString()
+
+const checkoutPayload = computed<Checkout>(() => ({
+    businessId: storeUser.userBusiness.id,
+    items: items.value,
+    totalAmount: Number(display.totalAmount),
+    paidAmount: Number(display.paidAmount),
+    workerId: storeUser.userData.id
+}))
+
+const checkout = async () => {
+
+    v$.value.$touch()
+
+    if (!await v$.value.$validate()) return
+    try {
+        await transactionStore.selling(checkoutPayload.value, storeUser.userData.id)
+        Object.assign(display, {
+            price: 0,
+            totalAmount: 0,
+            paidAmount: 0,
+            changeAmount: 0
+        })
+
+    } finally {
+        items.value = []
+    }
+}
+const getProducts = async () => {
+    try {
+        const response = await storeProduct.getProduct(storeUser.userBusiness.id)
+        products.value = response.data
+    } catch (error) {
+        console.log(error);
+
+    }
+}
+const quantityTyping = (data) => {
+    if (data === '' || data === null) {
+        quantity.value = 1
+    }
+}
+
+watch(subTotal, (val) => {
+    display.price = val
 })
 
 watch(search, async (val) => {
@@ -346,12 +354,14 @@ watch(quantity, (val) => {
 })
 watch(items, (val) => {
     const result: number = val.reduce((acc, curr) => {
-        return acc + curr.totalPrice
+        return acc + curr.subTotal
     }, 0)
-    display.totalAmount = result.toString()
-    payload.totalAmount = result
+    display.totalAmount = result
 }, {
     deep: true,
     immediate: true
+})
+onMounted(() => {
+    getProducts()
 })
 </script>
