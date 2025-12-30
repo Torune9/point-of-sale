@@ -7,6 +7,17 @@ export const getStockMovements = async (req: Request, res: Response) => {
         const stockMovements = await prisma.stockMovement.findMany({
             where: {
                 businessId: businessId as string
+            },
+            include : {
+                product : {
+                    select : {
+                        name : true,
+                        id : true
+                    }
+                }
+            },
+            orderBy : {
+                createdAt : 'desc'
             }
         })
         return res.json({
