@@ -5,9 +5,7 @@
         </label>
         <input type="text" :name="label" :id="label"
             class="w-full border border-black/20 focus:outline-primary p-2 rounded-lg hover:outline-1 hover:outline-accent transition-all duration-500"
-            v-model="displayValue" :placeholder="placeholder" :disabled="disabled" :autocomplete="autoComplete" :class="{
-                'bg-gray-300': disabled
-            }">
+            v-model="displayValue" :placeholder="placeholder" :disabled="disabled" :autocomplete="autoComplete" :class="[disabled ? 'bg-slate-200' : 'bg-white' ]">
         <small class="text-red-700">
             {{ errorMessage ? errorMessage[0].$message : '' }}
         </small>

@@ -4,7 +4,7 @@
             {{ label }}
         </label>
         <input :type="type" :name="label" :id="label"
-            class="w-full border border-black/20 focus:outline-primary p-2 rounded-lg hover:outline-1 hover:outline-accent transition-all duration-500"
+            class="w-full border border-black/20 focus:outline-primary p-2 rounded-lg hover:outline-1 hover:outline-accent transition-all duration-500 bg-white"
             v-model="model" @input="updateInput" :placeholder="placeholder" :disabled="disabled" :class="{
                 'bg-gray-300': disabled
             }">

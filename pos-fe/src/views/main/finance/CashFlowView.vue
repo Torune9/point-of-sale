@@ -1,7 +1,7 @@
 <template>
     <div class="flex flex-col gap-y-4 h-full sm:px-20 lg:p-0">
         <div class="h-full font-inter font-medium grid grid-flow-row grid-cols-[auto_1fr] gap-4">
-            <div class="max-lg:col-span-2 space-y-4 lg:w-96">
+            <div class="max-lg:col-span-2 space-y-4 lg:w-96 bg-white p-4 rounded-2xl h-max outline outline-black/10">
                 <Title tag="h1">
                     Input Cash
                 </Title>
@@ -12,7 +12,7 @@
                         <label for="type">Type</label>
                         {{ payload.type }}
                         <select name="type" id="type" v-model="payload.type"
-                            class="border border-black/20 p-3 rounded-lg w-full">
+                            class="border border-black/20 p-3 rounded-lg w-full bg-white">
                             <option value="" disabled>
                                 choose type
                             </option>

@@ -47,7 +47,7 @@ const typeClass = computed<string>(() => {
         case 'cta':
             return 'bg-secondary hover:bg-secondary/80';
         default:
-            return 'bg-primary hover:bg-primary/80'
+            return 'bg-accent hover:bg-accent/80'
     }
 })
 

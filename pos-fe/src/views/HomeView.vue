@@ -19,8 +19,8 @@
                 </BaseButton>
             </div>
         </div>
-        <div class="w-full flex justify-center items-center max-lg:hidden">
-            <div class=" rounded overflow-hidden h-[90%]">
+        <div class="w-full flex justify-center items-center">
+            <div class=" rounded overflow-hidden h-96">
                 <img src="../assets/images/hero.jpg" alt="orang sedang memegang struk di depan mesin kasir"
                     class="h-full w-full object-cover">
             </div>

@@ -9,10 +9,10 @@
                 <div class="flex flex-col gap-y-2 relative">
                     <label for="search">search</label>
 
-                    <div class="flex flex-row border border-black/20 rounded-md hover:outline">
+                    <div class="flex flex-row border border-black/20 rounded-md hover:outline overflow-hidden">
                         <input placeholder="search product..." type="text" id="search" v-model="search"
-                            list="product-list" class="p-2 w-full focus:outline-0" autocomplete="off" />
-                        <button class="border-l-0 px-2 cursor-pointer group" @click="triggerDropdown">
+                            list="product-list" class="p-2 w-full focus:outline-0 bg-white" autocomplete="off" />
+                        <button class="border-l-0 px-2 cursor-pointer group bg-white" @click="triggerDropdown">
                             <Icon icon="heroicons:chevron-down-16-solid" class="transition-all duration-300" :class="{
                                 'rotate-x-180': isOpen || showDropdown
                             }" />
@@ -107,7 +107,7 @@
             </EasyTable>
         </div>
         <!-- Info transaction -->
-        <div class=" row-span-3 col-span-2 bg-gray-100 p-4 rounded-2xl flex flex-col gap-y-2">
+        <div class=" row-span-3 col-span-2 bg-white outline outline-black/10 p-4 rounded-2xl flex flex-col gap-y-2">
             <Title tag="h3" class="text-center">Information</Title>
             <form @submit.prevent="checkout" class="h-full flex flex-col gap-y-2">
                 <InputCurrency :disabled="true" label="total amout" v-model="display.totalAmount" placeholder="0" />
