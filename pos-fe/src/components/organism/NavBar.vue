@@ -2,8 +2,8 @@
     <nav class="h-18 w-full flex flex-row justify-between items-center px-8 bg-secondary z-50 transition-all duration-300"
         :class="isHidden ? '-translate-y-full' : 'translate-y-0'">
         <div>
-            <div class="w-36">
-                <img :src="logo" alt="navbar logo image" class="w-full h-full object-cover invert">
+            <div class="w-36 mix-blend-difference">
+                <img :src="logo" alt="navbar logo image" class="w-full h-full object-cover">
             </div>
         </div>
         <LandingNavbar/>

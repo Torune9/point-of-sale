@@ -5,9 +5,11 @@
 @theme {
     --font-inter : "Inter", sans-serif;
 
-    --color-primary: #FBFFE4;
-    --color-secondary: #B3D8A8;
-    --color-accent: #3D8D7A;
+    --color-primary: #F6FCDF;
+    --color-secondary: #1A1A19;
+    --color-accent: #31511E;
+
+    --text-primary : #fff;
 }
 
 :root {

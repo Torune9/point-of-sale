@@ -16,7 +16,7 @@
                         </BaseButton>
                     </div>
                     <select name="category" id="category"
-                        class="border border-black/20 p-2 rounded-md focus:outline-0 max-md:col-span-2 cursor-pointer lg:order-2 hover:outline"
+                        class="border border-black/20 p-2 rounded-md focus:outline-0 max-md:col-span-2 cursor-pointer lg:order-2 hover:outline bg-white"
                         v-model="selectedCategory">
                         <option value="" disabled>Choose Category</option>
                         <option v-for="(category, i) in categories" :value="category.id">
@@ -82,7 +82,8 @@ import { notify } from '@/helper/toastifyHelper';
 import { categoryStore } from '@/stores/categoryStore';
 import { productStore } from '@/stores/productStore';
 import { userStore } from '@/stores/userStore';
-import { Category, Product, UpdateItems } from '@/types/payloads/product';
+import { Category } from '@/types/category';
+import { UpdateItems } from '@/types/payloads/product';
 import { onMounted, provide, ref, watch, watchEffect } from 'vue';
 import { ClickRowArgument, Header, Item } from 'vue3-easy-data-table';
 // composable

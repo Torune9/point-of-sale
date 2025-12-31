@@ -1,11 +1,11 @@
 <template>
-    <div class="min-h-screen w-full grid grid-rows-[auto_1fr] lg:grid-cols-[auto_1fr] bg-primary">
+    <div class="min-h-screen w-full grid grid-rows-[auto_1fr] lg:grid-cols-[auto_1fr]">
 
         <header class="p-2 lg:col-start-2 sticky top-0 z-20">
             <div
-                class="flex justify-between items-center p-2 bg-secondary rounded-2xl text-black">
+                class="flex justify-between items-center p-2 bg-secondary rounded-2xl">
                 <div class="w-32">
-                    <img src="../assets/images/logo.png" alt="image logo" class="invert">
+                    <img src="../assets/images/logo.png" alt="image logo" class="">
                 </div>
                 <div class="flex items-center gap-2">
                     <div class="w-14 h-14 overflow-hidden rounded-full shadow-md">
@@ -14,7 +14,7 @@
                         </div>
                     </div>
 
-                    <div class="min-w-32">
+                    <div class="min-w-32 text-white">
                         <p class="font-medium">
                             Jhon Brown
                         </p>
@@ -45,14 +45,14 @@
             </div>
             <div class="p-3 flex flex-col gap-y-2">
                 <RouterLink to="#"
-                    class="capitalize flex flex-row gap-x-2 items-center font-semibold rounded p-2 hover:bg-accent hover:text-white transition-colors duration-300">
+                    class="capitalize text-primary/80 flex flex-row gap-x-2 items-center font-semibold rounded p-2 hover:bg-accent hover:text-white transition-colors duration-300">
                     <Icon icon="heroicons:cog-6-tooth" />
                     <span>
                         Settings
                     </span>
                 </RouterLink>
                 <button @click.stop="logout" type="button"
-                    class="cursor-pointer capitalize flex flex-row gap-x-2 items-center font-semibold rounded p-2 hover:bg-accent hover:text-white transition-colors duration-300 w-full ">
+                    class="cursor-pointer capitalize text-primary/80 flex flex-row gap-x-2 items-center font-semibold rounded p-2 hover:bg-accent hover:text-white transition-colors duration-300 w-full ">
                     <Icon icon="heroicons:power-16-solid" />
                     <span>
                         Logout

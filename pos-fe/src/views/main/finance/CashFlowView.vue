@@ -46,7 +46,7 @@
                             class="bg-accent text-white hover:bg-secondary cursor-pointer rounded-md transition-all duration-300 w-14 h-max p-1"
                             :class="{
                                 'hidden': activeIdx !== null && activeIdx !== idx,
-                                'bg-primary': activeIdx == idx,
+                                'bg-secondary': activeIdx == idx,
                             }">
                             {{ type }}
                         </button>

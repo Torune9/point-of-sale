@@ -4,17 +4,17 @@
         <div class="flex flex-col gap-y-8 justify-center items-center sm:h-screen py-8 sm:py-0">
             <div class="w-full flex flex-col gap-y-8  lg:text-start">
                 <h1 class="text-5xl lg:text-6xl">
-                    Kelola Penjualan & Stok Lebih Mudah dengan EntryPOS
+                    <span class="text-accent">Kelola Penjualan</span> & Stok Lebih Mudah dengan EntryPOS
                 </h1>
                 <h2>
-                    Solusi kasir sederhana untuk bisnis yang sedang tumbuh.EntryPOS membantu Anda mencata transaksi,
+                    Solusi kasir sederhana untuk bisnis yang sedang tumbuh. EntryPOS membantu Anda mencata transaksi,
                     memantau stok, dan melihat laporan semua dalam satu dashboard yang mudah digunakan.
                 </h2>
             </div>
             <div class="lg:w-full">
-                <BaseButton typeBtn="cta">
+                <BaseButton typeBtn="cta" type="button">
                     <template #title-btn>
-                        Pakai sekarang
+                        <span class="text-primary/90">Pakai sekarang</span>
                     </template>
                 </BaseButton>
             </div>
@@ -41,12 +41,15 @@
         </div>
     </section>
     <!-- Fitur -->
-    <section class="flex flex-col gap-y-4 content">
+    <section class="flex flex-col gap-y-4 content py-2">
         <Title tag="h1">
             Fitur
         </Title>
-        <div class="flex flex-col gap-y-2">
-            <CustomSummary :datas="listFeature" />
+        <div class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 rounded-2xl">
+             <div v-for="value in listFeature" class="bg-secondary p-4 rounded-2xl flex flex-col gap-y-2 shadow-sm">
+                <h1 class="text-xl font-semibold text-primary">{{ value.title }}</h1>
+                <p class="text-primary/70">{{ value.text }}</p>
+             </div>
         </div>
     </section>
 

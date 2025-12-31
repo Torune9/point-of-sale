@@ -1,9 +1,9 @@
 <template>
     <div class="w-8 space-y-1 cursor-pointer lg:hidden" @click="showMenu">
-        <span class="block w-full h-1 bg-black"
+        <span class="block w-full h-1 bg-white/80"
             :class="[props.isOpen ? 'rotate-45 translate-y-2' : '', 'transition-all duration-300']" />
-        <span class="block w-full h-1 bg-black" :class="[props.isOpen ? 'scale-0' : '', 'transition-all duration-300']" />
-        <span class="block w-full h-1 bg-black"
+        <span class="block w-full h-1 bg-white/80" :class="[props.isOpen ? 'scale-0' : '', 'transition-all duration-300']" />
+        <span class="block w-full h-1 bg-white/80"
             :class="[props.isOpen ? '-rotate-45 -translate-y-2' : '', 'transition-all duration-300']" />
     </div>
 </template>

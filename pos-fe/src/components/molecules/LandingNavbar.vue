@@ -25,9 +25,9 @@
         </Transition>
 
         <div v-if="!isMobile" class="flex gap-x-14 items-center">
-            <Wrapper class="flex flex-row gap-x-2">
+            <Wrapper class="flex flex-row gap-x-2 text-primary">
                 <MenuItem :items="listDataMenu"
-                    class="transition-colors duration-300 rounded-full px-4 relative shrink-0 before:content-[''] before:absolute before:w-full before:scale-0 before:h-[1px] before:top-full before:left-0 before:bg-black hover:before:scale-100 before:transition-all before:duration-300">
+                    class="transition-colors duration-300 rounded-full px-4 relative shrink-0 before:content-[''] before:absolute before:w-full before:scale-0 before:h-[1px] before:top-full before:left-0 before:bg-white/80 hover:before:scale-100 before:transition-all before:duration-300">
                 </MenuItem>
             </Wrapper>
             <BaseButton size="sm">

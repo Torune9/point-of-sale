@@ -2,7 +2,7 @@
     <header class="sticky top-0">
         <NavBar/>
     </header>
-    <main class="wrapper bg-primary">
+    <main class="wrapper">
         <slot/>
     </main>
 </template>
