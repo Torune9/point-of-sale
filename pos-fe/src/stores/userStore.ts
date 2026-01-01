@@ -53,5 +53,8 @@ export const userStore = defineStore('user', {
                 return { success: false, error }
             }
         },
+        logout (){
+            this.$reset()
+        }
     }
 })
