@@ -7,7 +7,7 @@ import QrCode from 'qrcode'
 export const updateProduct = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { productId, businessId } = req.params;
-        const { name, price, stock } = req.body;
+        const { name, price, stock,categoryId } = req.body;
 
         const existingProduct = await prisma.product.findFirst({
             where: {
@@ -40,6 +40,7 @@ export const updateProduct = async (req: Request, res: Response, next: NextFunct
             where: { id: productId as string, businessId: businessId as string, },
             data: {
                 barcode: resultQrCode,
+                categoryId : categoryId ?? existingProduct.categoryId,
                 name: name ?? existingProduct.name,
                 stock:
                     stock !== undefined
