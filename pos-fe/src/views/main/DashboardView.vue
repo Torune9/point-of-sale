@@ -1,48 +1,103 @@
 <template>
-    <div class="h-full grid max-sm:grid-rows-10 max-lg:grid-rows-8 sm:grid-cols-4 lg:grid-flow-row gap-2 [&>*]:p-2 [&>*]:rounded-2xl [&>*]:bg-gray-100">
-        <div class="h-fit sm:h-full sm:col-span-2">
-            <h1 class="font-medium text-2xl">Dashboard</h1>
-            <p>Informasi terkait toko anda</p>
+    <DashboardSketeleton v-if="isLoading"/>
+    <div v-else class="grid grid-cols-1 sm:grid-cols-4 gap-4 h-full">
+        <!-- HEADER -->
+        <div class="sm:col-span-2">
+            <h1 class="text-2xl font-semibold">Dashboard</h1>
+            <p class="text-sm text-gray-500">
+                Informasi terkait toko anda
+            </p>
         </div>
-        <div class="row-span-3 sm:row-span-3 sm:col-span-4 lg:row-start-2 lg:col-start-1 lg:col-span-2 lg:row-span-7">
-            Sales Overview
-        </div>
-        <div
-            class="row-span-2 grid grid-cols-2 sm:grid-cols-3 gap-2 sm:row-start-4 sm:col-span-4 lg:col-start-3 lg:row-start-1 lg:row-span-1 lg:col-span-2">
-            <div class="bg-primary text-white h-full p-2 rounded-xl flex flex-col gap-2 relative overflow-hidden max-sm:h-24" v-for="n in storeBusiness.dataCash">
-                <p class="capitalize sm:text-xl text-lg">
-                    {{ Object.keys(n)[0]}}
+
+        <!-- KPI CARDS -->
+        <div class="sm:col-span-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+            <div v-for="(value,i) in storeBusiness.dataCash" :key="Object.keys(value)[0]"
+                class="text-white rounded-xl p-3 shadow-sm flex flex-col justify-between border border-black/20" :class="{
+                    'bg-accent/70' : i == 0,
+                    'bg-red-600/70' : i == 1,
+                    'bg-yellow-500/70' : i == 2,
+                }">
+                <p class="text-sm capitalize opacity-90">
+                    {{ Object.keys(value)[0] }}
                 </p>
-               <p class="break-words text-xl lg:text-lg sm:text-2xl sm:mt-4">
-                {{ convert.covertToRupiah(Object.values(n)[0] as number) }}
-               </p>
+                <p class="text-xl font-semibold truncate">
+                    {{ convert.covertToRupiah(Object.values(value)[0] as number) }}
+                </p>
             </div>
         </div>
-        <div class="row-span-2 sm:col-start-3 sm:row-start-1 sm:col-span-2 sm:row-span-3 lg:col-start-4 lg:row-start-2 lg:col-span-1 lg:row-span-7">
-            <p>Anggota</p>
+
+        <!-- SALES OVERVIEW -->
+        <div class="sm:col-span-4 lg:col-span-3 rounded-2xl">
+            <LineChart :dataSet="dataSet" />
         </div>
-        <div class="row-span-2 sm:row-start-2 sm:col-span-2 sm:row-span-2 lg:col-start-3 lg:row-start-2 lg:col-span-1 lg:row-span-7">
-            Product
+
+        <!-- RIGHT SIDEBAR -->
+        <div class="sm:col-span-4 lg:col-span-1 grid grid-rows-2 gap-4">
+            <!-- MEMBERS -->
+            <div class="bg-pimary rounded-2xl p-4 border border-black/20">
+                <p class="font-medium mb-2">Anggota</p>
+                <p class="text-sm text-gray-500">Coming soon</p>
+            </div>
+
+            <!-- PRODUCTS -->
+            <div class="bg-pimary rounded-2xl p-4 border border-black/20">
+                <p class="font-medium mb-2">Product</p>
+                <p class="text-sm text-gray-500">Coming soon</p>
+            </div>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import Title from '@/components/atom/Title.vue';
-import { useConvert } from '@/composables/useConvert';
-import { businessStore } from '@/stores/businessStore';
-import { userStore } from '@/stores/userStore';
-import { onBeforeMount, onMounted, ref } from 'vue';
+import LineChart from '@/components/atom/LineChart.vue'
+import DashboardSketeleton from '@/components/organism/DashboardSketeleton.vue'
+import { useConvert } from '@/composables/useConvert'
+import { businessStore } from '@/stores/businessStore'
+import { financeStore } from '@/stores/financeStore'
+import { userStore } from '@/stores/userStore'
+import { computed, onBeforeMount, reactive, ref } from 'vue'
+const isLoading = ref<boolean>(true)
 
 const storeBusiness = businessStore()
+const storeFinance = financeStore()
 const storeUser = userStore()
 const convert = useConvert()
 
-const getTotalCash = () => {
-    storeBusiness.getTotalBusinessCash(storeUser.userBusiness.id)
-}
-onBeforeMount(() => {
-    getTotalCash()
-})
+const months = ref<[]>([])
+const totalDataInMonths = ref<[]>([])
 
+const getAnnualSales = async () => {
+    try {
+        const response = await storeFinance.getAnnualSales(storeUser.userBusiness.id)
+
+        months.value = response.result.data.map((val) =>
+            new Date(val.month).toLocaleString('id-ID', { month: 'short' })
+        )
+        totalDataInMonths.value = response.result.data.map(val => val.total)
+
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const dataSet = computed(() => ({
+    title: 'Sales Revenue Summary',
+    label: 'Monthly Income',
+    labels: months.value,
+    data: totalDataInMonths.value
+
+}))
+
+const emits = defineEmits<{
+    fetchDashboardData : [isDone: boolean]
+}>()
+
+onBeforeMount(async () => {
+    Promise.all([
+        await storeBusiness.getTotalBusinessCash(storeUser.userBusiness.id),
+        await getAnnualSales()
+    ]).finally(()=>{
+        isLoading.value = false
+    })
+})
 </script>

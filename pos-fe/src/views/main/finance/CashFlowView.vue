@@ -43,11 +43,11 @@
                     <div class="flex flex-row gap-x-2 items-center">
                         <button type="button" v-for="(type, idx) in types" :key="idx" :aria-selected="activeIdx === idx"
                             @click="selectedFilter(idx, type)"
-                            class="bg-accent text-white hover:bg-secondary cursor-pointer rounded-md transition-all duration-300 w-14 h-max p-1"
-                            :class="{
+                            class="text-white hover:bg-secondary cursor-pointer rounded-md transition-all duration-300 w-14 h-max p-1"
+                            :class="[idx % 2 == 0 ? 'bg-blue-600' : 'bg-red-600',{
                                 'hidden': activeIdx !== null && activeIdx !== idx,
                                 'bg-secondary': activeIdx == idx,
-                            }">
+                            }]">
                             {{ type }}
                         </button>
                     </div>

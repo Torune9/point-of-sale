@@ -46,7 +46,7 @@
             Fitur
         </Title>
         <div class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 rounded-2xl">
-             <div v-for="value in listFeature" class="bg-secondary p-4 rounded-2xl flex flex-col gap-y-2 shadow-sm">
+             <div v-for="value in listFeature" class="bg-secondary p-4 rounded-2xl flex flex-col gap-y-2 shadow-sm hover:scale-105 transition-transform">
                 <h1 class="text-xl font-semibold text-primary">{{ value.title }}</h1>
                 <p class="text-primary/70">{{ value.text }}</p>
              </div>
