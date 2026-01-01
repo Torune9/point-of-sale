@@ -9,9 +9,9 @@ export const categoryRouter = e.Router()
 
 categoryRouter.get('/:businessId', getCategory)
 
-categoryRouter.get('/:businessId/:id', getCategoryById)
+categoryRouter.post('/', adminAuth, createCategory)
 
-categoryRouter.post('/:businessId', adminAuth, createCategory)
+categoryRouter.get('/:businessId/:id', getCategoryById)
 
 categoryRouter.patch('/:businessId/:id', adminAuth, updateCategory)
 
