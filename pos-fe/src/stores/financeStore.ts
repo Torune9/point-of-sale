@@ -64,6 +64,16 @@ export const financeStore = defineStore('finance', {
                 handleError(error)
                 return { ok: false, error }
             }
+        },
+        async getAnnualSales(businessId: string) {
+            try {
+                const response = await api.get(`/sales/annual/${businessId}`)
+                const result: ResponseData = response.data
+                return { ok: true, result }
+            } catch (error) {
+                handleError(error)
+                return {ok:false,error}
+            }
         }
 
 
