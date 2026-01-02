@@ -95,28 +95,26 @@ const getWorkers = async () => {
     }
 }
 const getRoles = async () => {
-    try {
-        const response = await storeRoles.getRoles()
-        roles.value = response.result.data
-    } catch (error) {
-
-    }
+    const response = await storeRoles.getRoles()
+    roles.value = response.result.data
 }
 const isUpdate = ref<boolean>(false)
 
 const updateDataWorker = ref({
     username: '',
     email: '',
-    roleId: ''
+    roleId: '',
+    id : ''
 })
 
 const updateWorker = (worker: Worker) => {
     isShowForm.value = true
     isUpdate.value = true
     updateDataWorker.value = {
+        id : worker.id,
         username: worker.username,
         email: worker.email,
-        roleId: worker.role.id
+        roleId: worker.role.id,
     }
 }
 
