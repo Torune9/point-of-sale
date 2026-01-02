@@ -6,22 +6,15 @@ export const updateWorkers = async (req: Request, res: Response) => {
         const { businessId, id } = req.params
         const { username, email, roleId } = req.body
 
-        if (!username || !email) {
-            return res.status(400).json({
-                message: 'username or email must be filled',
-                code: res.statusCode
-            })
-        }
-
         const workers = await prisma.worker.update({
             where: {
                 id: id as string,
-                businessId : businessId as string
+                businessId: businessId as string
             },
             data: {
-                username,
-                email,
-                roleId
+                ...(username && { username }),
+                ...(email && { email }),
+                ...(roleId && { roleId })
             }
         })
 
