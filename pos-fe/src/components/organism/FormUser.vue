@@ -55,7 +55,7 @@ import BaseButton from '../atom/BaseButton.vue';
 import Title from '../atom/Title.vue';
 
 const props = defineProps<{
-    updateUser: Pick<WorkerPayload, 'username' | 'email' | 'roleId'>,
+    updateUser: { id: string } & Pick<WorkerPayload, 'username' | 'email' | 'roleId'>,
     isUpdate: boolean
 }>()
 
@@ -70,7 +70,7 @@ const storeWorker = workerStore()
 const storeUser = userStore()
 
 const emits = defineEmits<{
-    done : []
+    done: []
 }>()
 
 const roles = inject<Role[]>('roles')
@@ -86,10 +86,12 @@ const rules = computed(() => ({
         required,
         email
     },
-    password: {
-        required,
-        minLength: minLength(8)
-    },
+    password: props.isUpdate
+        ? {}
+        : {
+            required,
+            minLength: minLength(8)
+        },
     roleId: {
         required
     }
@@ -124,7 +126,11 @@ const submit = async () => {
     }
     isLoading.value = true
     try {
-        await storeWorker.createWorker(payload)
+        if (props.isUpdate) {
+            await storeWorker.updateWorker(storeUser.userBusiness.id, props.updateUser.id, payload)
+        } else {
+            await storeWorker.createWorker(payload)
+        }
     } finally {
         isLoading.value = false
         closeForm()
