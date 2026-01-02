@@ -217,15 +217,14 @@ const isDisableCheckoutBtn = computed(() => {
 const isStockOut = computed(() => selectedItem.value?.stock == 0)
 const v$ = useVuelidate(rules, { paidAmount: toRef(display, 'paidAmount') })
 
-
 const triggerDropdown = () => {
     selectedItem.value = null
-    search.value = ''
     isOpen.value = !isOpen.value
 }
 
 const filteredProducts = computed<Product[]>(() => {
-    if (!search.value.trim() || isOpen.value) return products.value
+    if (!search.value.trim()) return products.value
+
     return products.value.filter(p =>
         p.name.toLowerCase().includes(search.value.toLowerCase())
     )
@@ -322,7 +321,7 @@ const checkout = async () => {
 const getProducts = async () => {
     try {
         const response = await storeProduct.getProduct(storeUser.userBusiness.id)
-        products.value = response.data
+        products.value = response.result.data
     } catch (error) {
         console.log(error);
 
