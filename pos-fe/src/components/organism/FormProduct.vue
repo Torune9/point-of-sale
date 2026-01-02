@@ -109,7 +109,7 @@ const generateBarcode = async () => {
     loading.generate = true
     try {
         const response = await storeProduct.generateBarcode(props.updateItems.businessId, props.updateItems.id)
-        newBarcode.value = response.data
+        newBarcode.value = response.result.data
 
     } finally {
         loading.generate = false
@@ -157,7 +157,7 @@ onMounted(() => {
         displayPrice.value = formData.price.toLocaleString('id-ID')
 
         formData.name = props.updateItems.name
-        formData.categoryId = category.id
+        formData.categoryId = category?.id
         formData.stock = Number(props.updateItems.stock)
     }
 })
