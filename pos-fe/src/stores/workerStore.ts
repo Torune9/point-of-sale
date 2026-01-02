@@ -21,6 +21,17 @@ export const workerStore = defineStore('worker', {
                 return { ok: false }
             }
         },
+        async updateWorker(businessId: string, workerId: string, payload: WorkerPayload) {
+            try {
+                const response = await api.patch(`/workers/${businessId}/${workerId}`, payload)
+                const result: ResponseData = response.data
+                notify.success(result.message)
+                return { ok: true }
+            } catch (error) {
+                handleError(error)
+                return { ok: false }
+            }
+        },
         async getWorkers(businessId: string) {
             try {
                 const response = await api.get(`/workers/${businessId}`)
