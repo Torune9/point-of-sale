@@ -9,17 +9,20 @@
                 </div>
                 <div class="flex items-center gap-2">
                     <div class="w-14 h-14 overflow-hidden rounded-full shadow-md">
-                        <div class="w-full h-full">
+                        <div v-if="!userData?.profileImage" class="text-white w-full h-full bg-yellow-500 flex justify-center items-center text-2xl font-bold capitalize">
+                            {{ userData.username[0] }}
+                        </div>
+                        <div v-else class="w-full h-full">
                             <img src="../assets/images/example-profile.webp" class="w-full h-full object-fill">
                         </div>
                     </div>
 
                     <div class="min-w-32 text-white">
                         <p class="font-medium">
-                            Jhon Brown
+                            {{ userData.username }}
                         </p>
                         <p class="text-xs">
-                            jhon@mail.com
+                            {{ userData.email }}
                         </p>
                     </div>
                 </div>
@@ -37,7 +40,7 @@
             </button>
             <div class="p-4">
                 <h1 class="bg-white font-medium capitalize h-full p-2 rounded-2xl shadow">
-                    Hi, Jhon 😊
+                    Hi, {{ userData.username }} 😊
                 </h1>
             </div>
             <div class="overflow-y-auto p-2 h-full">
@@ -80,6 +83,7 @@ import BusinessMaker from '@/components/organism/BusinessMaker.vue';
 import sideMenuList from '@/data/sidebarMenu.json'
 import { userStore } from '@/stores/userStore';
 import { SubMenu } from '@/types/menu';
+import { storeToRefs } from 'pinia';
 import { Ref, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -89,6 +93,8 @@ const logout = ()=>{
     storeUser.logout()
     router.push('/')
 }
+
+const {userData} = storeToRefs(storeUser)
 
 const listMenu: Ref<SubMenu[]> = ref(sideMenuList as SubMenu[])
 
