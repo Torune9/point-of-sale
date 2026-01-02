@@ -162,7 +162,7 @@ const getProducts = async () => {
     try {
         const response = await storeProduct.getProduct(storeUser.userBusiness.id, selectedCategory.value)
 
-        items.value = response.data
+        items.value = response.result.data
 
     } catch (error) {
         console.log(error);
@@ -191,7 +191,7 @@ const clickRow = (item: ClickRowArgument) => {
 const getCategories = async () => {
     try {
         const response = await storeCategory.getCategories(storeUser.userBusiness.id)
-        categories.value = response.data
+        categories.value = response.result.data
     } catch (error) {
         console.log(error);
     }
