@@ -13,7 +13,7 @@ export const workerRouter = express.Router()
 
 workerRouter.post('/',validateData(Worker),createWorkers)
 
-workerRouter.get('/:businessId',adminAuth,getWorkers)
+workerRouter.get('/:businessId',getWorkers)
 
 workerRouter.patch('/:businessId/:id',adminAuth,updateWorkers)
 
