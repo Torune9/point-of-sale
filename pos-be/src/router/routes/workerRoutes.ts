@@ -7,13 +7,14 @@ import { Worker } from "../../schemas/workerSchema.js";
 import { updateWorkers } from "../../controller/users/workers/update.js";
 import { getWorkers } from "../../controller/users/workers/get.js";
 import { deleteWorkers } from "../../controller/users/workers/delete.js";
+import { adminAuth } from "../../middleware/adminAuthorization.js";
 
 export const workerRouter = express.Router()
 
 workerRouter.post('/',validateData(Worker),createWorkers)
 
-workerRouter.get('/:businessId',getWorkers)
+workerRouter.get('/:businessId',adminAuth,getWorkers)
 
-workerRouter.patch('/:businessId/:id',updateWorkers)
+workerRouter.patch('/:businessId/:id',adminAuth,updateWorkers)
 
-workerRouter.delete('/:businessId/:id',deleteWorkers)
+workerRouter.delete('/:businessId/:id',adminAuth,deleteWorkers)
