@@ -1,10 +1,10 @@
 [
     {
         "name" : "Tentang kami",
-        "path" : "tentang"
+        "path" : "#about"
     },
     {
         "name" : "Fitur",
-        "path" : "fitur"
+        "path" : "#feature"
     }
 ]

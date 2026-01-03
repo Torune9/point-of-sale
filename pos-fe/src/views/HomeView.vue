@@ -12,11 +12,13 @@
                 </h2>
             </div>
             <div class="lg:w-full">
-                <BaseButton typeBtn="cta" type="button">
-                    <template #title-btn>
-                        <span class="text-primary/90">Pakai sekarang</span>
-                    </template>
-                </BaseButton>
+                <RouterLink to="/sign-in">
+                    <BaseButton typeBtn="cta" type="button">
+                        <template #title-btn>
+                            <span class="text-primary/90">Pakai sekarang</span>
+                        </template>
+                    </BaseButton>
+                </RouterLink>
             </div>
         </div>
         <div class="w-full flex justify-center items-center">
@@ -27,7 +29,7 @@
         </div>
     </section>
     <!-- Content -->
-    <section class="flex flex-col gap-y-4 content">
+    <section class="flex flex-col gap-y-4 content" id="about">
         <Title tag="h1">
             Tentang Kami
         </Title>
@@ -41,15 +43,16 @@
         </div>
     </section>
     <!-- Fitur -->
-    <section class="flex flex-col gap-y-4 content py-2">
+    <section class="flex flex-col gap-y-4 content py-2" id="feature">
         <Title tag="h1">
             Fitur
         </Title>
         <div class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 rounded-2xl">
-             <div v-for="value in listFeature" class="bg-secondary p-4 rounded-2xl flex flex-col gap-y-2 shadow-sm hover:scale-105 transition-transform">
+            <div v-for="value in listFeature"
+                class="bg-secondary p-4 rounded-2xl flex flex-col gap-y-2 shadow-sm hover:scale-105 transition-transform">
                 <h1 class="text-xl font-semibold text-primary">{{ value.title }}</h1>
                 <p class="text-primary/70">{{ value.text }}</p>
-             </div>
+            </div>
         </div>
     </section>
 
