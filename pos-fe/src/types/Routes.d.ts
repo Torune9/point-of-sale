@@ -7,9 +7,7 @@ interface BaseRoute {
     redirect? : {
         name : string
     },
-    meta?: {
-        layout: string
-    }
+    meta?: {}
 }
 
 export interface ChildRouteType extends BaseRoute {
