@@ -20,7 +20,8 @@ export const inventoryRouter: ChildRouteType[] = [
             },
         ],
          meta: {
-            layout: 'main'
+            layout: 'main',
+            isAuth : true,
         },
     }
 ]

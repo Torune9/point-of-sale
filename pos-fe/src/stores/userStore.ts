@@ -10,7 +10,8 @@ export const userStore = defineStore('user', {
         token: null,
         userData: null,
         userBusiness: null,
-        role: null
+        role: null,
+        isLogged : false
     }),
     persist: true,
     actions: {
@@ -22,9 +23,10 @@ export const userStore = defineStore('user', {
 
                 this.token = dataResponse.token
                 this.userData = dataResponse.data
-
+                this.isLogged = true
+                
                 notify.success(dataResponse.message)
-
+                
                 return { success: true }
 
             } catch (error) {
@@ -37,22 +39,24 @@ export const userStore = defineStore('user', {
                 const path = isWorker ? '/auth/login/worker' : '/auth/login'
                 const response = await api.post(path, payload)
                 const result: ResponseLogin = response.data as ResponseLogin
-
+                
                 this.token = result.token
                 this.userData = result.data
                 this.userBusiness = result.business
                 this.role = result.role
-
+                this.isLogged = true
+                
                 notify.success(result.message)
-
+                
                 return { success: true }
-
+                
             } catch (error) {
                 handleError(error)
                 return { success: false, error }
             }
         },
         logout() {
+            this.isLogged = false
             this.token = null
             this.userData = null
             this.userBusiness = null
