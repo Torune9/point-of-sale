@@ -2,14 +2,14 @@
     <div class="min-h-screen w-full grid grid-rows-[auto_1fr] lg:grid-cols-[auto_1fr]">
 
         <header class="p-2 lg:col-start-2 sticky top-0 z-20">
-            <div
-                class="flex justify-between items-center p-2 bg-secondary rounded-2xl">
+            <div class="flex justify-between items-center p-2 bg-secondary rounded-2xl">
                 <div class="w-32">
                     <img src="../assets/images/logo.png" alt="image logo" class="">
                 </div>
                 <div class="flex items-center gap-2">
                     <div class="w-14 h-14 overflow-hidden rounded-full shadow-md">
-                        <div v-if="!userData?.profileImage" class="text-white w-full h-full bg-yellow-500 flex justify-center items-center text-2xl font-bold capitalize">
+                        <div v-if="!userData?.profileImage"
+                            class="text-white w-full h-full bg-yellow-500 flex justify-center items-center text-2xl font-bold capitalize">
                             {{ userData.username[0] }}
                         </div>
                         <div v-else class="w-full h-full">
@@ -84,17 +84,18 @@ import sideMenuList from '@/data/sidebarMenu.json'
 import { userStore } from '@/stores/userStore';
 import { SubMenu } from '@/types/menu';
 import { storeToRefs } from 'pinia';
-import { Ref, ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { Ref, ref, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 
 const storeUser = userStore()
 const router = useRouter()
-const logout = ()=>{
+const routes = useRoute()
+const logout = () => {
     storeUser.logout()
     router.push('/')
 }
 
-const {userData} = storeToRefs(storeUser)
+const { userData } = storeToRefs(storeUser)
 
 const listMenu: Ref<SubMenu[]> = ref(sideMenuList as SubMenu[])
 
@@ -102,6 +103,13 @@ const isShow: Ref<boolean> = ref(false)
 const showSideBar = () => {
     isShow.value = !isShow.value
 }
+watch(
+    () => routes.fullPath,
+    (to, from) => {
+      isShow.value = !(to !== from)
+    }
+)
+
 </script>
 
 <style scoped>
