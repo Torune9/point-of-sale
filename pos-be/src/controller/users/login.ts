@@ -38,7 +38,8 @@ const ownerLogin = async (req: Request, res: Response) => {
 
         const tokenPayload = {
             id: users.id,
-            roleId: users.roleId
+            roleId: users.roleId,
+            businessId : users.business?.id
         }
 
         const publicDataUser = {
@@ -100,7 +101,8 @@ const workerLogin = async (req: Request, res: Response) => {
         const tokenPayload = {
             id: worker.id,
             email: worker.email,
-            roleId: worker.roleId
+            roleId: worker.roleId,
+            businessId : worker.business?.id
         }
 
         const publicDataUser = {
