@@ -1,5 +1,5 @@
 <template>
-    <DashboardSketeleton v-if="isLoading"/>
+    <DashboardSketeleton v-if="isLoading" />
     <div v-else class="grid grid-cols-1 sm:grid-cols-4 gap-4 h-full">
         <!-- HEADER -->
         <div class="sm:col-span-2">
@@ -11,11 +11,11 @@
 
         <!-- KPI CARDS -->
         <div class="sm:col-span-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-            <div v-for="(value,i) in storeBusiness.dataCash" :key="Object.keys(value)[0]"
+            <div v-for="(value, i) in storeBusiness.dataCash" :key="Object.keys(value)[0]"
                 class="text-white rounded-xl p-3 shadow-sm flex flex-col justify-between border border-black/20" :class="{
-                    'bg-accent/70' : i == 0,
-                    'bg-red-600/70' : i == 1,
-                    'bg-yellow-500/70' : i == 2,
+                    'bg-accent/70': i == 0,
+                    'bg-red-600/70': i == 1,
+                    'bg-yellow-500/70': i == 2,
                 }">
                 <p class="text-sm capitalize opacity-90">
                     {{ Object.keys(value)[0] }}
@@ -55,7 +55,7 @@ import { useConvert } from '@/composables/useConvert'
 import { businessStore } from '@/stores/businessStore'
 import { financeStore } from '@/stores/financeStore'
 import { userStore } from '@/stores/userStore'
-import { computed, onBeforeMount, reactive, ref } from 'vue'
+import { computed, onBeforeMount, ref } from 'vue'
 const isLoading = ref<boolean>(true)
 
 const storeBusiness = businessStore()
@@ -89,15 +89,16 @@ const dataSet = computed(() => ({
 }))
 
 const emits = defineEmits<{
-    fetchDashboardData : [isDone: boolean]
+    fetchDashboardData: [isDone: boolean]
 }>()
 
 onBeforeMount(async () => {
     Promise.all([
         await storeBusiness.getTotalBusinessCash(storeUser.userBusiness.id),
         await getAnnualSales()
-    ]).finally(()=>{
+    ]).finally(() => {
         isLoading.value = false
     })
 })
+
 </script>
