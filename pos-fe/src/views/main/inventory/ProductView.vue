@@ -35,7 +35,7 @@
                 </div>
                 <!-- product table -->
                 <div class="capitalize font-inter font-medium">
-                    <EasyTable :headers="headers" :items="items" border-cell alternating :rows-per-page="10"
+                    <EasyTable :headers="headers" :items="storeProduct.getProducts" border-cell alternating :rows-per-page="10"
                         :rows-items="[10, 15]" table-class-name="customize-table" @click-row="clickRow"
                         :loading="isLoading" :search-field="searchField" :search-value="search">
                         <template #item-action="item">
@@ -160,10 +160,7 @@ const closeForm = (data: boolean, isLoad: boolean) => {
 const getProducts = async () => {
     isLoading.value = true
     try {
-        const response = await storeProduct.getProduct(storeUser.userBusiness.id, selectedCategory.value)
-
-        items.value = response.result.data
-
+        await storeProduct.getProduct(storeUser.userBusiness.id, selectedCategory.value)
     } catch (error) {
         console.log(error);
         notify.error("error when getting products")
