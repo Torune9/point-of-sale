@@ -84,8 +84,9 @@ import sideMenuList from '@/data/sidebarMenu.json'
 import { userStore } from '@/stores/userStore';
 import { SubMenu } from '@/types/menu';
 import { storeToRefs } from 'pinia';
-import { Ref, ref, watch } from 'vue';
+import { Ref, ref, watch, onMounted} from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { connectSocket } from '@/services/socket';
 
 const storeUser = userStore()
 const router = useRouter()
@@ -109,6 +110,11 @@ watch(
       isShow.value = !(to !== from)
     }
 )
+onMounted(() => {
+    if (storeUser.token) {
+        connectSocket(storeUser.token)
+    }
+})
 
 </script>
 
