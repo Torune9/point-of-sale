@@ -1,0 +1,17 @@
+model Businesses {
+  id          String        @id @default(uuid())
+  name        String
+  owner       User          @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId     String        @unique
+  workers     Worker[]
+  categories  Category[]
+  products    Product[]
+  sales       Sale[]
+  cashflows   Cashflow[]
+  items       Item[]           
+  stockMoves  StockMovement[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@map("businesses")
+}

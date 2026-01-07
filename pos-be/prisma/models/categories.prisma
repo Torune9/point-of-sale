@@ -1,0 +1,11 @@
+model Category {
+  id          String        @id @default(uuid())
+  name        String
+  business    Businesses    @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  businessId  String
+  products    Product[]
+
+  @@unique([businessId, name])
+  @@index([businessId])
+  @@map("categories")
+}

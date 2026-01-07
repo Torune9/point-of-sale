@@ -1,0 +1,16 @@
+model Item {
+  id           String       @id @default(cuid())
+  quantity     Int
+  price        Float
+  subtotal     Float
+  sale         Sale         @relation(fields: [saleId], references: [id])
+  saleId       String
+  product      Product      @relation(fields: [productId], references: [id])
+  productId    String
+  business     Businesses   @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  businessId   String
+  createdAt    DateTime     @default(now())
+
+  @@index([businessId])
+  @@map("items")
+}

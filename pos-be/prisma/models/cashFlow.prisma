@@ -1,0 +1,16 @@
+model Cashflow {
+  id          String        @id @default(uuid())
+  type        MovementType
+  amount      Float
+  note        String?
+  sale        Sale?         @relation(fields: [saleId], references: [id], onDelete: SetNull)
+  saleId      String?
+  business    Businesses    @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  businessId  String
+  worker      Worker?       @relation(fields: [workerId], references: [id], onDelete: SetNull)
+  workerId    String?
+  createdAt   DateTime      @default(now())
+
+  @@index([businessId])
+  @@map("cashflows")
+}

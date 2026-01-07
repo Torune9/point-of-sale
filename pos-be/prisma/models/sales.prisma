@@ -1,0 +1,17 @@
+
+model Sale {
+  id            String        @id @default(cuid())
+  invoice       String        @unique
+  totalAmount   Float
+  paidAmount    Float
+  changeAmount  Float
+  business      Businesses    @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  businessId    String
+  items         Item[]
+  movements     StockMovement[]
+  cashflows     Cashflow[]
+  createdAt     DateTime      @default(now())
+
+  @@index([businessId])
+  @@map("sales")
+}
