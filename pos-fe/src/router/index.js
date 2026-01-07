@@ -29,6 +29,7 @@ const router = createRouter({
             component: PeopleView,
             meta: {
                 layout: "main",
+                isAuth: true
             },
         },
         {
