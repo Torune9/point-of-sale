@@ -37,7 +37,7 @@
             </div>
             <div class="inline-flex gap-x-2">
                 <div class="shrink-0">
-                    <TextInput :disabled="isStockOut" label="quantity" v-model="quantity" type="number"
+                    <TextInput label="quantity" v-model="quantity" type="number"
                         @on-input-update="quantityTyping" />
                     <small v-if="selectedItem" class="font-semibold">
                         Available stock :
@@ -179,7 +179,6 @@ const headers = ref<Header[]>([
         value: 'action'
     }
 ])
-const products = ref<Product[]>()
 const quantity = ref<number>(1)
 const search = ref('')
 const selectedItem = ref<Product>()
@@ -214,7 +213,7 @@ const rules = computed(() => ({
 const isDisableCheckoutBtn = computed(() => {
     return !display.paidAmount || selectedItem.value?.stock == 0
 })
-const isStockOut = computed(() => selectedItem.value?.stock == 0)
+const isStockOut = computed(() => selectedItem.value?.stock == 0 || quantity.value  > selectedItem.value?.stock)
 const v$ = useVuelidate(rules, { paidAmount: toRef(display, 'paidAmount') })
 
 const triggerDropdown = () => {
@@ -223,9 +222,9 @@ const triggerDropdown = () => {
 }
 
 const filteredProducts = computed<Product[]>(() => {
-    if (!search.value.trim()) return products.value
+    if (!search.value.trim()) return storeProduct.getProducts
 
-    return products.value.filter(p =>
+    return storeProduct.getProducts.filter(p =>
         p.name.toLowerCase().includes(search.value.toLowerCase())
     )
 })
@@ -320,8 +319,7 @@ const checkout = async () => {
 }
 const getProducts = async () => {
     try {
-        const response = await storeProduct.getProduct(storeUser.userBusiness.id)
-        products.value = response.result.data
+        await storeProduct.getProduct(storeUser.userBusiness.id)
     } catch (error) {
         console.log(error);
 
