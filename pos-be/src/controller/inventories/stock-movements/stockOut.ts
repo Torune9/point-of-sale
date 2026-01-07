@@ -3,18 +3,24 @@ import prisma from "../../../utils/prisma.js";
 import { generateInvoice } from "../../../helper/invoiceGenerator.js";
 import { generateReceiptPDF } from "../../../helper/receiptReportPdf.js";
 import type { SaleItem } from "../../../schemas/stockMovementSchema.js";
+import { getIO } from "../../../socket.js";
 
 export const stockOutSelling = async (req: Request, res: Response) => {
     try {
         const { businessId, items, totalAmount, paidAmount, workerId } = req.body;
         const products = items as Array<SaleItem>;
 
+        const outOfStockEvents: {
+            productId: string;
+            productName: string;
+            stock: number
+        }[] = [];
+
         const result = await prisma.$transaction(async (tx) => {
             if (paidAmount < totalAmount) {
                 throw new Error("money is not enough");
             }
 
-            // Buat data penjualan
             const selling = await tx.sale.create({
                 data: {
                     businessId,
@@ -25,17 +31,22 @@ export const stockOutSelling = async (req: Request, res: Response) => {
                 },
             });
 
-            // Loop setiap produk yang dijual
             for (const item of products) {
-                const product = await prisma.product.findFirst({
+                const product = await tx.product.findFirst({
                     where: { id: item.productId },
                 });
 
-                if (!product) throw new Error(`Product ${item.productId} not found`);
-                if (product.stock === 0 || item.quantity > product.stock)
-                    throw new Error(`Product ${product.name} out of stock`);
+                if (!product) {
+                    throw new Error(`Product ${item.productId} not found`);
+                }
 
-                // Buat item penjualan
+                if (item.quantity > product.stock) {
+                    throw new Error(`Product ${product.name} out of stock`);
+                }
+
+                const oldStock = product.stock;
+                const newStock = oldStock - item.quantity;
+
                 await tx.item.create({
                     data: {
                         quantity: item.quantity,
@@ -43,17 +54,15 @@ export const stockOutSelling = async (req: Request, res: Response) => {
                         price: item.price,
                         subtotal: item.price * item.quantity,
                         saleId: selling.id,
-                        businessId: businessId,
+                        businessId,
                     },
                 });
 
-                // Update stok produk
                 await tx.product.update({
                     where: { id: item.productId },
-                    data: { stock: { decrement: item.quantity } },
+                    data: { stock: newStock },
                 });
 
-                // Catat pergerakan stok
                 await tx.stockMovement.create({
                     data: {
                         quantity: item.quantity,
@@ -61,12 +70,18 @@ export const stockOutSelling = async (req: Request, res: Response) => {
                         note: "SALE",
                         productId: item.productId,
                         saleId: selling.id,
-                        businessId: businessId,
+                        businessId,
                     },
+                });
+
+                // 🔔 DETEKSI MOMEN STOK HABIS
+                outOfStockEvents.push({
+                    productId: product.id,
+                    productName: product.name,
+                    stock: newStock
                 });
             }
 
-            // Catat cashflow
             await tx.cashflow.create({
                 data: {
                     type: "IN",
@@ -81,7 +96,34 @@ export const stockOutSelling = async (req: Request, res: Response) => {
             return selling;
         });
 
-        // Ambil data lengkap untuk struk
+        //  EMIT NOTIF SETELAH TRANSAKSI SUKSES
+        if (outOfStockEvents.length > 0) {
+            const io = getIO();
+
+            for (const event of outOfStockEvents) {
+                if (event.stock == 0) {
+                    io.to(`store:${businessId}`).emit("product:empty-stock", {
+                        message: `Stok ${event.productName} habis`,
+                        product: {
+                            id: event.productId,
+                            name: event.productName,
+                            stock: event.stock
+                        }
+                    });
+                }else{
+                    io.to(`store:${businessId}`).emit("product:stock-out-sales", {
+                        message: `Stok out sales ${event.productName}`,
+                        product: {
+                            id: event.productId,
+                            name: event.productName,
+                            stock: event.stock
+                        }
+                    });
+
+                }
+            }
+        }
+
         const sale = await prisma.sale.findUnique({
             where: { id: result.id },
             include: {
@@ -94,12 +136,10 @@ export const stockOutSelling = async (req: Request, res: Response) => {
             return res.status(404).json({ message: "Sale not found" });
         }
 
-        // Jika client meminta print PDF
         if (req.query.print === "true") {
             return generateReceiptPDF(sale, res);
         }
 
-        // Default: response JSON
         return res.json({
             message: "Products have been sold",
             data: sale,
@@ -107,7 +147,6 @@ export const stockOutSelling = async (req: Request, res: Response) => {
     } catch (error: any) {
         return res.status(500).json({
             message: error.message || "Error processing sale",
-            error,
         });
     }
 };
