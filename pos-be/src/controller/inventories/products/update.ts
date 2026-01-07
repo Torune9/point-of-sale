@@ -3,6 +3,7 @@ import prisma from "../../../utils/prisma.js";
 import { isPrismaError } from "../../../utils/isPrismaError.js";
 import { cloudinaryImageDestroy, cloudinaryImageUpload } from "../../../utils/cloudinary.js";
 import QrCode from 'qrcode'
+import { getIO } from "../../../socket.js";
 
 export const updateProduct = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -52,6 +53,18 @@ export const updateProduct = async (req: Request, res: Response, next: NextFunct
                         : existingProduct.price,
             },
         });
+
+        if (updatedProduct) {
+            const io = getIO()
+            io.to(`store:${businessId}`).emit('product:stock-update',{
+                message : `stock of ${updatedProduct.name},has been updated`,
+                product : {
+                    id : updatedProduct.id,
+                    name : updatedProduct.name,
+                    stock : updatedProduct.stock
+                }
+            })
+        }
 
         return res.json({
             message: "Product has been updated",
