@@ -5,7 +5,7 @@ model Product {
   price       Float
   stock       Int           @default(0)
   barcode     String?
-  category    Category?     @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  category    Category?     @relation(fields: [categoryId,businessId], references: [id,businessId], onDelete: Restrict)
   categoryId  String?
   business    Businesses    @relation(fields: [businessId], references: [id], onDelete: Cascade)
   businessId  String

@@ -2,9 +2,12 @@ import { Businesses, Category, Product } from "@prisma/client";
 import prisma from "../../src/utils/prisma.js";
 
 export async function productSeeder(categories: Category[], businesses: Businesses[]): Promise<Product[]> {
-    const getCategoryId = (name: string) => {
-        return categories.find((c) => c.name === name)?.id || null;
-    };
+    const getCategoryId = (name: string, businessId: string) => {
+        return categories.find(
+            (c) => c.name === name && c.businessId === businessId
+        )?.id || null
+    }
+
 
     // Template produk default (10 item)
     const productTemplates = [
@@ -27,14 +30,15 @@ export async function productSeeder(categories: Category[], businesses: Business
             sku: `${p.sku}-${business.id.slice(0, 4)}`,
             price: p.price,
             stock: p.stock,
-            categoryId: getCategoryId(p.category),
+            categoryId: getCategoryId(p.category, business.id),
             businessId: business.id,
-        }));
+        }))
 
         await prisma.product.createMany({
             data: productsData,
-        });
+        })
     }
+
 
     return prisma.product.findMany()
 }

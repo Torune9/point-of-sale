@@ -1,9 +1,11 @@
 model Category {
-  id          String        @id @default(uuid())
+  id          String        @default(uuid())
   name        String
   business    Businesses    @relation(fields: [businessId], references: [id], onDelete: Cascade)
   businessId  String
   products    Product[]
+
+  @@id([id, businessId])
 
   @@unique([businessId, name])
   @@index([businessId])
